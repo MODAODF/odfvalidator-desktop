@@ -1,9 +1,11 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import path from 'path'
 
 // Custom APIs for renderer
-const api = {}
+const api = {
+  ping: () => ipcRenderer.invoke('ping'),
+  checkJava: () => ipcRenderer.invoke('check-java')
+}
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
