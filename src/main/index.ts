@@ -50,7 +50,7 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  ipcMain.handle('ping', Handlers.pingHandler)
+  // Register ipc handlers
   ipcMain.handle('check-java', Handlers.checkJavaHandler)
 
   createWindow()

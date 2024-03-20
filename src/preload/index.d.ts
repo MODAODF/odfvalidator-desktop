@@ -4,7 +4,6 @@ declare global {
   interface Window {
     electron: ElectronAPI
     api: {
-      ping: () => Promise<string>
       checkJava: () => Promise<string | null>
     }
   }

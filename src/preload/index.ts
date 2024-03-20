@@ -3,7 +3,6 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
 const api = {
-  ping: () => ipcRenderer.invoke('ping'),
   checkJava: () => ipcRenderer.invoke('check-java')
 }
 
