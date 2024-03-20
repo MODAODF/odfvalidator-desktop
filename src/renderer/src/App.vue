@@ -25,19 +25,35 @@ onMounted(async () => {
     <p>{{ javaDescription }}</p>
   </div>
   <div v-else>
-    <h1>Java is already installed</h1>
-    <p>{{ javaDescription }}</p>
+    <p>Java is already installed</p>
+    <p>Your Java version is: {{ javaDescription }}</p>
+    <FileSelector />
   </div>
-  <FileSelector />
 </template>
 
 <style>
+:root {
+  background-color: #f7fafc;
+  color: #282828;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    background-color: #282828;
+    color: #e0e0e0;
+    transition:
+      background-color 0.3s,
+      color 0.3s;
+  }
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
   margin-top: 60px;
 }
 </style>
