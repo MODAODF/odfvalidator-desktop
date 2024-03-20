@@ -3,7 +3,9 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
 const api = {
-  checkJava: () => ipcRenderer.invoke('check-java')
+  checkJava: () => ipcRenderer.invoke('check-java'),
+  specifyOdfvalidatorPath: () => ipcRenderer.invoke('specify-odfvalidator-path'),
+  checkPlatformAndOdfvalidatorPath: () => ipcRenderer.invoke('check-windows-and-odfvalidator-path')
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

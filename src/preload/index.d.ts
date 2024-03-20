@@ -5,6 +5,8 @@ declare global {
     electron: ElectronAPI
     api: {
       checkJava: () => Promise<string | null>
+      specifyOdfvalidatorPath: () => Promise<string | null>
+      checkPlatformAndOdfvalidatorPath: () => Promise<string | null>
     }
   }
 }

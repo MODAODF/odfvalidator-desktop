@@ -52,6 +52,11 @@ app.whenReady().then(() => {
 
   // Register ipc handlers
   ipcMain.handle('check-java', Handlers.checkJavaHandler)
+  ipcMain.handle('specify-odfvalidator-path', Handlers.specifyOdfvalidatorPathHandler)
+  ipcMain.handle(
+    'check-windows-and-odfvalidator-path',
+    Handlers.checkPlatformAndOdfvalidatorPathHandler
+  )
 
   createWindow()
 
