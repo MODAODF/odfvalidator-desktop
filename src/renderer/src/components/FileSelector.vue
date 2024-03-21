@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { Ref, ref } from 'vue'
+import { Ref, ref, watch } from 'vue'
 import { onMounted } from 'vue'
+import { useEnvironmentStore } from '@renderer/stores/environment'
+const environment = useEnvironmentStore()
 
 const odfvalidatorPath: Ref<string | null> = ref(null)
 
@@ -15,6 +17,14 @@ async function specifyOdfvalidatorPath() {
     odfvalidatorPath.value = path
   }
 }
+
+watch(odfvalidatorPath, () => {
+  if (odfvalidatorPath.value) {
+    environment.odfvalidatorPathSpecified = true
+  } else {
+    environment.odfvalidatorPathSpecified = false
+  }
+})
 </script>
 
 <template>

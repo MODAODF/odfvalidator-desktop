@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import FileSelector from './components/FileSelector.vue'
-import { Ref, ref } from 'vue'
+import DragFile from './components/DragFile.vue'
+import { Ref, ref, watch } from 'vue'
 import { onMounted } from 'vue'
+import { useEnvironmentStore } from './stores/environment';
+
+const environment = useEnvironmentStore()
 
 const javaInstalled: Ref<string | null> = ref(null)
 const javaDescription: Ref<string> = ref('')
+
 onMounted(async () => {
   const response: string | null = await window.api.checkJava()
   console.log(response)
@@ -15,6 +20,14 @@ onMounted(async () => {
     javaDescription.value = javaInstalled.value as string
     javaDescription.value =
       javaDescription.value.split(' ')[0] + ' ' + javaDescription.value.split(' ')[1]
+  }
+})
+
+watch(javaInstalled, () => {
+  if (javaInstalled.value) {
+    environment.javaInstalled = true
+  } else {
+    environment.javaInstalled = false
   }
 })
 </script>
@@ -28,6 +41,7 @@ onMounted(async () => {
     <p>Java is already installed</p>
     <p>Your Java version is: {{ javaDescription }}</p>
     <FileSelector />
+    <DragFile v-if="environment.javaInstalled && environment.odfvalidatorPathSpecified" />
   </div>
 </template>
 
