@@ -25,7 +25,8 @@
     "@electron-toolkit/utils": "^3.0.0",
     "electron-store": "^8.2.0",
     "electron-updater": "^6.1.7",
-    "glob": "^10.3.10"
+    "glob": "^10.3.10",
+    "pinia": "^2.1.7"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config": "^1.0.2",
