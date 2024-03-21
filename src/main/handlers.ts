@@ -18,7 +18,7 @@ function getOdfvalidatorPathFromElectronStore(): string | undefined {
 
 export default class {
   public static async checkJavaHandler(): Promise<string | null> {
-    let result: unknown
+    let result: string | null
     const { stdout, stderr } = await execPromise('java --version')
     if (stderr) {
       console.error('stderr:', stderr)
@@ -39,7 +39,7 @@ export default class {
     const filePath: string[] | undefined = dialog.showOpenDialogSync({ properties: ['openFile'] })
     if (filePath) {
       const regex: RegExp = /odfvalidator-.*-jar-with-dependencies.jar/
-      const fileName = path.basename(filePath[0])
+      const fileName: string = path.basename(filePath[0])
 
       // Check if the file is odfvalidator jar file
       if (regex.test(fileName)) {
@@ -61,21 +61,20 @@ export default class {
     }
 
     let odftoolkitPath: string
-    let fileNamePattern: string
 
     // FIXME: Not working on Windows
     if (platform === 'win32') {
       odftoolkitPath = 'C:\\odftoolkit'
-      fileNamePattern = 'odfvalidator-*-jar-with-dependencies.jar'
     } else {
       // For Unix-like OS
       odftoolkitPath = '/usr/local/odftoolkit'
-      fileNamePattern = 'odfvalidator-*-jar-with-dependencies.jar'
     }
 
+    const fileNamePattern: string = 'odfvalidator-*-jar-with-dependencies.jar'
     const searchPattern: string = path.join(odftoolkitPath, fileNamePattern)
+
     try {
-      const files = await glob(searchPattern)
+      const files: string[] = await glob(searchPattern)
       saveOdfvalidatorPathToElectronStore(files[0])
       return files[0]
     } catch (error) {
