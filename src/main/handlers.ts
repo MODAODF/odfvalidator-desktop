@@ -15,6 +15,7 @@ function saveOdfvalidatorPathToElectronStore(path: string) {
 function getOdfvalidatorPathFromElectronStore(): string | undefined {
   return store.get('odfvalidatorPath') as string | undefined
 }
+
 export default class {
   public static async checkJavaHandler(): Promise<string | null> {
     let result: unknown
@@ -39,6 +40,8 @@ export default class {
     if (filePath) {
       const regex: RegExp = /odfvalidator-.*-jar-with-dependencies.jar/
       const fileName = path.basename(filePath[0])
+
+      // Check if the file is odfvalidator jar file
       if (regex.test(fileName)) {
         saveOdfvalidatorPathToElectronStore(filePath[0])
         return filePath[0]
@@ -52,39 +55,31 @@ export default class {
     const platform: string = process.platform
     const storeedOdfvalidatorPath: string | undefined = getOdfvalidatorPathFromElectronStore()
 
+    // Use the stored path if it exists
     if (storeedOdfvalidatorPath) {
       return storeedOdfvalidatorPath
     }
 
+    let odftoolkitPath: string
+    let fileNamePattern: string
+
     // FIXME: Not working on Windows
     if (platform === 'win32') {
-      const odftoolkitPath: string = 'C:\\odftoolkit'
-      const fileNamePattern: string = 'odfvalidator-*-jar-with-dependencies.jar'
-
-      const searchPattern = path.join(odftoolkitPath, fileNamePattern)
-
-      try {
-        const files = await glob(searchPattern)
-        saveOdfvalidatorPathToElectronStore(files[0])
-        return files[0]
-      } catch (error) {
-        console.error(error)
-      }
+      odftoolkitPath = 'C:\\odftoolkit'
+      fileNamePattern = 'odfvalidator-*-jar-with-dependencies.jar'
+    } else {
+      // For Unix-like OS
+      odftoolkitPath = '/usr/local/odftoolkit'
+      fileNamePattern = 'odfvalidator-*-jar-with-dependencies.jar'
     }
 
-    if (platform === 'linux') {
-      const odftoolkitPath: string = '/usr/local/odftoolkit'
-      const fileNamePattern: string = 'odfvalidator-*-jar-with-dependencies.jar'
-
-      const searchPattern = path.join(odftoolkitPath, fileNamePattern)
-
-      try {
-        const files = await glob(searchPattern)
-        saveOdfvalidatorPathToElectronStore(files[0])
-        return files[0]
-      } catch (error) {
-        console.error(error)
-      }
+    const searchPattern: string = path.join(odftoolkitPath, fileNamePattern)
+    try {
+      const files = await glob(searchPattern)
+      saveOdfvalidatorPathToElectronStore(files[0])
+      return files[0]
+    } catch (error) {
+      console.error(error)
     }
     return null
   }
