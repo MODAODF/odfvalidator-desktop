@@ -3,9 +3,18 @@ import { dialog } from 'electron'
 import { glob } from 'glob'
 import path from 'path'
 import util from 'util'
+import Store from 'electron-store'
 
+const store = new Store()
 const execPromise = util.promisify(exec)
 
+function saveOdfvalidatorPathToElectronStore(path: string) {
+  store.set('odfvalidatorPath', path)
+}
+
+function getOdfvalidatorPathFromElectronStore(): string | undefined {
+  return store.get('odfvalidatorPath') as string | undefined
+}
 export default class {
   public static async checkJavaHandler(): Promise<string | null> {
     let result: unknown
@@ -31,6 +40,7 @@ export default class {
       const regex: RegExp = /odfvalidator-.*-jar-with-dependencies.jar/
       const fileName = path.basename(filePath[0])
       if (regex.test(fileName)) {
+        saveOdfvalidatorPathToElectronStore(filePath[0])
         return filePath[0]
       }
     }
@@ -40,6 +50,11 @@ export default class {
 
   public static async checkPlatformAndOdfvalidatorPathHandler(): Promise<string | null> {
     const platform: string = process.platform
+    const storeedOdfvalidatorPath: string | undefined = getOdfvalidatorPathFromElectronStore()
+
+    if (storeedOdfvalidatorPath) {
+      return storeedOdfvalidatorPath
+    }
 
     // FIXME: Not working on Windows
     if (platform === 'win32') {
@@ -50,6 +65,7 @@ export default class {
 
       try {
         const files = await glob(searchPattern)
+        saveOdfvalidatorPathToElectronStore(files[0])
         return files[0]
       } catch (error) {
         console.error(error)
@@ -64,7 +80,7 @@ export default class {
 
       try {
         const files = await glob(searchPattern)
-        console.log(files[0])
+        saveOdfvalidatorPathToElectronStore(files[0])
         return files[0]
       } catch (error) {
         console.error(error)

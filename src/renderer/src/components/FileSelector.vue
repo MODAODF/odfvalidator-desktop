@@ -18,6 +18,6 @@ async function specifyOdfvalidatorPath() {
 </script>
 
 <template>
-  <button v-if="!odfvalidatorPath" @click="specifyOdfvalidatorPath">Select the Odfvalidator</button>
+  <button @click="specifyOdfvalidatorPath">Select the Odfvalidator</button>
   <p v-if="odfvalidatorPath">{{ odfvalidatorPath }}</p>
 </template>
