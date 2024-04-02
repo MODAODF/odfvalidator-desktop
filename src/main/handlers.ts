@@ -82,4 +82,72 @@ export default class {
     }
     return null
   }
+
+  public static async detectFileHandler(pathList: string[]): Promise<object[] | null> {
+    const platform: string = process.platform
+    
+    let odftoolkitPath: string
+
+    // FIXME: Not working on Windows
+    if (platform === 'win32') {
+      odftoolkitPath = 'C:\\odftoolkit'
+    } else {
+      // For Unix-like OS
+      odftoolkitPath = '/usr/local/odftoolkit'
+    }
+
+    const fileNamePattern: string = 'odfvalidator-*-jar-with-dependencies.jar'
+    const searchPattern: string = path.join(odftoolkitPath, fileNamePattern)
+    const result: object[] = []
+
+    for (const filePath of pathList) {
+      const command = `java -jar ${searchPattern} ${filePath} -v -e`
+      const fileName = filePath.split('/').pop()
+      const rootDocVersionRegex: RegExp = /ODF version of root document: (\d+\.\d+)/
+      const generatorRegex: RegExp = /Info: Generator: ((?:OxOffice\/\w+(\.\d+)*)|(\S+\/\d+(\.\d+)*))/
+      try {
+        const { stdout } = await execPromise(command)
+        const passed: boolean = stdout.includes(`${filePath}:  Info: no errors, no warnings`)
+        const rootDocVersionMatch: RegExpMatchArray | null = stdout.match(rootDocVersionRegex)
+        const generatorMatch: RegExpMatchArray | null = stdout.match(generatorRegex)
+        if (passed) {
+          const entry = {
+            [filePath]: [
+              { standard: true },
+              { msg: `${fileName} 檔案符合標準的 ODF 格式` },
+              { rootDocVersion: rootDocVersionMatch ? rootDocVersionMatch[1] : '無法解析' },
+              { generator: generatorMatch ? generatorMatch[1] : '無法解析' }
+            ]
+          };
+          result.push(entry)
+        }
+      } catch (error: Error | any) {
+        const errMsg = error.stdout
+        const rootDocVersionMatch: RegExpMatchArray | null = errMsg.match(rootDocVersionRegex)
+        const generatorMatch: RegExpMatchArray | null = errMsg.match(generatorRegex)
+        if (rootDocVersionMatch !== null) {
+          const entry = {
+            [filePath]: [
+              { standard: false },
+              { msg: `${fileName} 檔案不符合標準的 ODF 格式` },
+              { rootDocVersion: rootDocVersionMatch ? rootDocVersionMatch[1] : '無法解析' },
+              { generator: generatorMatch ? generatorMatch[1] : '無法解析' }
+            ]
+          }
+          result.push(entry)
+        } else {
+          const entry = {
+            [filePath]: [
+              { standard: false },
+              { msg: `${fileName} 檔案非 ODF 文件格式` },
+              { rootDocVersion: '無法解析' },
+              { generator: '無法解析' }
+            ]
+          }
+          result.push(entry)
+        }
+      }
+    }
+    return result
+  }
 }

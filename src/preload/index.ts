@@ -5,7 +5,8 @@ import { electronAPI } from '@electron-toolkit/preload'
 const api = {
   checkJava: () => ipcRenderer.invoke('check-java'),
   specifyOdfvalidatorPath: () => ipcRenderer.invoke('specify-odfvalidator-path'),
-  checkPlatformAndOdfvalidatorPath: () => ipcRenderer.invoke('check-windows-and-odfvalidator-path')
+  checkPlatformAndOdfvalidatorPath: () => ipcRenderer.invoke('check-windows-and-odfvalidator-path'),
+  detectFile: (pathList: string[]) => ipcRenderer.invoke('detect-file', pathList)
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

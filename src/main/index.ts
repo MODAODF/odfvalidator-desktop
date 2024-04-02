@@ -57,6 +57,9 @@ app.whenReady().then(() => {
     'check-windows-and-odfvalidator-path',
     Handlers.checkPlatformAndOdfvalidatorPathHandler
   )
+  ipcMain.handle('detect-file', async (_, pathList) => {
+    return await Handlers.detectFileHandler(pathList)
+  })
 
   createWindow()
 

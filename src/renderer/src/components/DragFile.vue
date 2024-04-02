@@ -1,19 +1,16 @@
 <script setup lang="ts">
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faFile } from '@fortawesome/free-solid-svg-icons'
+import { ref, Ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const dragFileList: Ref<File[]> = ref([])
+const uploaded = ref<boolean>(false)
+const router = useRouter()
 
 function selectFiles() {
   // TODO: Implement the selectFiles function
   console.log('Selecting files')
-}
-
-function dragEnter(e: DragEvent) {
-  // TODO: Implement the dragEnter function
-  console.log('Drag enter')
-  if (!e.dataTransfer) return
-  for (const file of e.dataTransfer.files) {
-    console.log(file)
-  }
 }
 
 function drop(e: DragEvent) {
@@ -21,11 +18,27 @@ function drop(e: DragEvent) {
   e.preventDefault()
   e.stopPropagation()
   console.log('Drop')
+  if (!e.dataTransfer?.files) return
+  dragFileList.value = Array.from(e.dataTransfer.files)
+  if (dragFileList.value.length > 0) uploaded.value = true
 }
 
 function dragLeave() {
   // TODO: Implement the dragLeave function
   console.log('Drag leave')
+}
+
+async function detectFile() {
+  const pathList: string[] = [];
+  for (const file of dragFileList.value) {
+    pathList.push(file['path'])
+  }
+  try {
+    const response: string | null = await window.api.detectFile(pathList)
+    router.push({ name: 'DetectReport', query: { detectResult: JSON.stringify(response) } })
+  } catch (error) {
+    console.error('An error occurred while detecting file:', error)
+  }
 }
 </script>
 
@@ -35,11 +48,20 @@ function dragLeave() {
     <div
       class="file-catcher"
       @click="selectFiles"
-      @dragenter="dragEnter"
       @drop="drop"
       @dragleave="dragLeave"
+      @dragover.prevent
     >
       <FontAwesomeIcon :icon="faFile" size="6x"></FontAwesomeIcon>
+    </div>
+    <div v-if="uploaded">
+      <p>已成功上傳檔案:</p>
+      <ol>
+        <li v-for="(dragFile, key) in dragFileList" :key="key" class="uploaded_filelist">
+          {{ dragFile['name'] }}
+        </li>
+      </ol>
+      <button @click="detectFile">開始檢測</button>
     </div>
   </div>
 </template>
@@ -60,5 +82,9 @@ function dragLeave() {
   cursor: pointer;
   transition: all 200ms;
   width: fit-content;
+}
+
+.uploaded_filelist {
+  text-align: left;
 }
 </style>

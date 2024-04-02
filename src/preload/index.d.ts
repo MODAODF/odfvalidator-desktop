@@ -7,6 +7,7 @@ declare global {
       checkJava: () => Promise<string | null>
       specifyOdfvalidatorPath: () => Promise<string | null>
       checkPlatformAndOdfvalidatorPath: () => Promise<string | null>
+      detectFile: (pathList: string[]) => Promise<string | null>
     }
   }
 }
