@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { Ref, ref, watch } from 'vue'
+import { Ref, ref } from 'vue'
 
 export const useEnvironmentStore = defineStore('environment', () => {
   const javaInstalled: Ref<boolean> = ref(false)

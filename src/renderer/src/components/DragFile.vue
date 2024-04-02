@@ -34,10 +34,12 @@ function drop(e: DragEvent) {
 }
 
 function dragOver(e: DragEvent) {
+  console.log(e)
   // TODO: Implement dragOver
 }
 
 function dragLeave(e: DragEvent) {
+  console.log(e)
   // TODO: Implement dragLeave
 }
 

@@ -3,7 +3,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
 const router = useRouter()
-const detectResult = JSON.parse(route.query.detectResult)
+const detectResult = JSON.parse(route.query.detectResult as string)
 
 function goHome() {
     router.push('/')
