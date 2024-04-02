@@ -33,8 +33,12 @@ function drop(e: DragEvent) {
   if (dragFileList.value.length > 0) uploaded.value = true
 }
 
-function dragLeave() {
-  // TODO: Implement the dragLeave function
+function dragOver(e: DragEvent) {
+  // TODO: Implement dragOver
+}
+
+function dragLeave(e: DragEvent) {
+  // TODO: Implement dragLeave
 }
 
 async function detectFile(e: MouseEvent) {
@@ -59,8 +63,8 @@ async function detectFile(e: MouseEvent) {
       class="file-catcher"
       @click="selectFiles"
       @drop="drop"
-      @dragleave="dragLeave"
-      @dragover.prevent
+      @dragleave.self.stop="dragLeave"
+      @dragover.prevent.self="dragOver"
     >
       <FontAwesomeIcon :icon="faFile" size="6x"></FontAwesomeIcon>
     </div>
@@ -90,8 +94,20 @@ async function detectFile(e: MouseEvent) {
   padding: 36px 48px;
   text-align: center;
   cursor: pointer;
-  transition: all 200ms;
   width: fit-content;
+  position: relative;
+}
+
+.file-catcher,
+.file-catcher:deep {
+  cursor: pointer;
+  transition: all 200ms;
+}
+
+.file-catcher:hover,
+.file-catcher:deep(:hover) {
+  color: aquamarine;
+  border-color: aquamarine;
 }
 
 .uploaded_filelist {
