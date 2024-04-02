@@ -97,7 +97,11 @@ export default class {
     }
 
     const fileNamePattern: string = 'odfvalidator-*-jar-with-dependencies.jar'
-    const searchPattern: string = path.join(odftoolkitPath, fileNamePattern)
+    let searchPattern: string = path.join(odftoolkitPath, fileNamePattern)
+    if (platform === 'win32') {
+      const odftoolkit: string[] = await glob(searchPattern)
+      searchPattern = odftoolkit[0]
+    }
     const result: object[] = []
 
     for (const filePath of pathList) {
