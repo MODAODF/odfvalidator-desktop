@@ -9,12 +9,22 @@ const uploaded = ref<boolean>(false)
 const router = useRouter()
 
 function selectFiles() {
-  // TODO: Implement the selectFiles function
-  console.log('Selecting files')
+  const fileInput: HTMLInputElement = document.createElement('input')
+  fileInput.type = 'file'
+  fileInput.multiple = true
+  fileInput.style.display = 'none'
+  document.body.appendChild(fileInput)
+  fileInput.click()
+  fileInput.onchange = () => {
+    if (fileInput.files) {
+      dragFileList.value = Array.from(fileInput.files)
+      if (dragFileList.value.length > 0) uploaded.value = true
+    }
+    document.body.removeChild(fileInput)
+  }
 }
 
 function drop(e: DragEvent) {
-  // TODO: Implement the drop function
   e.preventDefault()
   e.stopPropagation()
   console.log('Drop')
@@ -25,11 +35,10 @@ function drop(e: DragEvent) {
 
 function dragLeave() {
   // TODO: Implement the dragLeave function
-  console.log('Drag leave')
 }
 
 async function detectFile() {
-  const pathList: string[] = [];
+  const pathList: string[] = []
   for (const file of dragFileList.value) {
     pathList.push(file['path'])
   }
