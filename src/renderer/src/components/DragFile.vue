@@ -37,7 +37,8 @@ function dragLeave() {
   // TODO: Implement the dragLeave function
 }
 
-async function detectFile() {
+async function detectFile(e: MouseEvent) {
+  ;(e.target as HTMLButtonElement).disabled = true
   const pathList: string[] = []
   for (const file of dragFileList.value) {
     pathList.push(file['path'])
