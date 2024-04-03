@@ -74,7 +74,7 @@ export default class {
     const searchPattern: string = path.join(odftoolkitPath, fileNamePattern)
 
     try {
-      const files: string[] = await glob(searchPattern)
+      const files: string[] = await glob(searchPattern, {windowsPathsNoEscape:true})
       saveOdfvalidatorPathToElectronStore(files[0])
       return files[0]
     } catch (error) {
