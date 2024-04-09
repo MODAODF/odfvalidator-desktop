@@ -4,6 +4,9 @@ import { glob } from 'glob'
 import path from 'path'
 import util from 'util'
 import Store from 'electron-store'
+import os from 'os'
+import crypto from 'crypto'
+import rimraf from 'rimraf'
 
 const store = new Store()
 const execPromise = util.promisify(exec)
@@ -99,6 +102,7 @@ export default class {
       const fileName = filePath.split('/').pop()
       const rootDocVersionRegex: RegExp = /ODF version of root document: (\d+\.\d+)/
       const generatorRegex: RegExp = /Info: Generator: ((?:OxOffice\/\w+(\.\d+)*)|(\S+\/\d+(\.\d+)*))/
+      const mediaTypeRegex: RegExp = /Media Type:\s*(.*)/
       try {
         const { stdout } = await execPromise(command)
         const rootDocVersionMatch: RegExpMatchArray | null = stdout.match(rootDocVersionRegex)
@@ -115,14 +119,36 @@ export default class {
       } catch (error: Error | any) {
         const errMsg = error.stdout
         const rootDocVersionMatch: RegExpMatchArray | null = errMsg.match(rootDocVersionRegex)
-        const generatorMatch: RegExpMatchArray | null = errMsg.match(generatorRegex)
+
         if (rootDocVersionMatch !== null) {
+          const generatorMatch: RegExpMatchArray | null = errMsg.match(generatorRegex)
+          const mediaTypeMatch: RegExpMatchArray = errMsg.match(mediaTypeRegex)
+          const format = this.fetchSaveAsFormat(mediaTypeMatch[1])
+          const tmpDir = this.uniquePath()
+          const convertCommand = `libreoffice --headless --convert-to ${format} ${filePath} --outdir ${tmpDir}`
+          let canFix: boolean = false
+
+          try {
+            const { stdout } = await execPromise(convertCommand)
+            if (stdout !== null) {
+              const redetectCommand = `java -jar ${odftoolkitPath} ${tmpDir}/${fileName} -v -e`
+              const redetectRes = await execPromise(redetectCommand)
+              if (redetectRes.stdout !== null) {
+                canFix = true
+              }
+            }
+          } catch (error) {}
+
+          // remove the temporary directory
+          this.rmTmpDir(tmpDir as string)
+
           const entry = {
             [filePath]: [
               { standard: false },
               { msg: `${fileName} 檔案不符合標準的 ODF 格式` },
               { rootDocVersion: rootDocVersionMatch ? rootDocVersionMatch[1] : '無法解析' },
-              { generator: generatorMatch ? generatorMatch[1] : '無法解析' }
+              { generator: generatorMatch ? generatorMatch[1] : '無法解析' },
+              { canFix: canFix }
             ]
           }
           result.push(entry)
@@ -140,5 +166,43 @@ export default class {
       }
     }
     return result
+  }
+
+  private static fetchSaveAsFormat(mediaType: string) {
+    let saveAsFormat: string | null = ''
+
+    switch (mediaType) {
+      case 'application/vnd.oasis.opendocument.text':
+        saveAsFormat = 'odt'
+        break
+      case 'application/vnd.oasis.opendocument.spreadsheet':
+        saveAsFormat = 'ods'
+        break
+      case 'application/vnd.oasis.opendocument.presentation':
+        saveAsFormat = 'odp'
+        break
+      default:
+        saveAsFormat = null
+    }
+    return saveAsFormat
+  }
+
+  private static uniquePath(): string | null {
+    const randomBytes = crypto.randomBytes(16).toString('hex')
+
+    // get the operating system's tmporary directory path
+    const osTmpDir = os.tmpdir()
+
+    const tmpDir = path.join(osTmpDir, randomBytes)
+    return tmpDir
+  }
+
+  private static rmTmpDir(tmpDirPath: string) {
+    try {
+      rimraf.rimrafSync(tmpDirPath)
+      return true
+    } catch {
+      return false
+    }
   }
 }

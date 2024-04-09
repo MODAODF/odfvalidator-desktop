@@ -20,6 +20,10 @@ function goHome() {
                     </b>
                     <p>儲存的 ODF 格式版本：{{ value[2].rootDocVersion }}</p>
                     <p>創建檔案的文件應用工具：{{ value[3].generator }}</p>
+                    <p v-if="value[4]?.canFix" class="detect-canfix">
+                        {{ `可將 ${key.toString().split('/').pop()} 透過「ODF」文件應用工具「另存新檔」以通過檢驗` }}
+                        <br>
+                    </p>
                 </span>
             </li>
         </ol>
@@ -43,5 +47,9 @@ function goHome() {
 
 .detect-fail {
     color: red;
+}
+
+.detect-canfix {
+    color: blue;
 }
 </style>
