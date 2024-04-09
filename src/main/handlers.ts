@@ -111,8 +111,8 @@ export default class {
           [filePath]: [
             { standard: true },
             { msg: `${fileName} 檔案符合標準的 ODF 格式` },
-            { rootDocVersion: rootDocVersionMatch ? rootDocVersionMatch[1] : '無法解析' },
-            { generator: generatorMatch ? generatorMatch[1] : '無法解析' }
+            { rootDocVersion: rootDocVersionMatch ? rootDocVersionMatch[1] : '未知' },
+            { generator: generatorMatch ? generatorMatch[1] : '未知' }
           ]
         };
         result.push(entry)
@@ -146,8 +146,8 @@ export default class {
             [filePath]: [
               { standard: false },
               { msg: `${fileName} 檔案不符合標準的 ODF 格式` },
-              { rootDocVersion: rootDocVersionMatch ? rootDocVersionMatch[1] : '無法解析' },
-              { generator: generatorMatch ? generatorMatch[1] : '無法解析' },
+              { rootDocVersion: rootDocVersionMatch ? rootDocVersionMatch[1] : '未知' },
+              { generator: generatorMatch ? generatorMatch[1] : '未知' },
               { canFix: canFix }
             ]
           }
@@ -157,8 +157,8 @@ export default class {
             [filePath]: [
               { standard: false },
               { msg: `${fileName} 檔案非 ODF 文件格式` },
-              { rootDocVersion: '無法解析' },
-              { generator: '無法解析' }
+              { rootDocVersion: '未知' },
+              { generator: '未知' }
             ]
           }
           result.push(entry)
