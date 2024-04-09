@@ -31,7 +31,9 @@
     "electron-store": "^8.2.0",
     "electron-updater": "^6.1.7",
     "glob": "^10.3.10",
+    "os": "^0.1.2",
     "pinia": "^2.1.7",
+    "rimraf": "^5.0.5",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
