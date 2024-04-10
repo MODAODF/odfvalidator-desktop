@@ -1,19 +1,18 @@
 <script setup lang="ts">
-import { useRoute, useRouter } from 'vue-router'
+import { defineProps } from 'vue'
 
-const route = useRoute()
-const router = useRouter()
-const detectResult = JSON.parse(route.query.detectResult as string)
-
-function goHome() {
-    router.push('/')
-}
+const props = defineProps({
+    detectResult: {
+        type: Object as () => Record<string, any>,
+        required: true
+    }
+})
 </script>
 
 <template>
     <div class="detect-content">
         <ol>
-            <li v-for="(detectInfo, path) in detectResult" :key="path" class="detect-list">
+            <li v-for="(detectInfo, path) in props.detectResult" :key="path" class="detect-list">
                 <span v-for="(value, key) in detectInfo" :key="key">
                     <b :class="value[0].standard ? 'detect-success' : 'detect-fail'">
                         {{ value[1].msg }}
@@ -27,8 +26,6 @@ function goHome() {
                 </span>
             </li>
         </ol>
-        <br>
-        <button @click="goHome">回到檢測首頁</button>
     </div>
 </template>
 

@@ -10,8 +10,8 @@ const router = createRouter({
     },
     {
       path: '/detect-report',
-      name: 'DetectReport',
-      component: () => import('../views/DetectReport.vue'),
+      name: 'Report',
+      component: () => import('../views/Report.vue'),
     }
   ]
 });

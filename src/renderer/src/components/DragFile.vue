@@ -51,7 +51,7 @@ async function detectFile(e: MouseEvent) {
   }
   try {
     const response: string | null = await window.api.detectFile(pathList)
-    router.push({ name: 'DetectReport', query: { detectResult: JSON.stringify(response) } })
+    router.push({ name: 'Report', query: { detectResult: JSON.stringify(response) } })
   } catch (error) {
     console.error('An error occurred while detecting file:', error)
   }
