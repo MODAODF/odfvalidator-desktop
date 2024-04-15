@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeMount, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import Overview from '../components/reports/Overview.vue'
+import ShowAll from '../components/reports/ShowAll.vue'
 import Table from '../components/reports/Table.vue'
 import ShowFile from '../components/reports/ShowFile.vue'
 
@@ -33,6 +33,7 @@ const router = useRouter()
 const detectResult: Array<{ [key: string]: any[]}> = JSON.parse(route.query.detectResult as string)
 const showFileData = ref({})
 const showFileDataLength = computed(() => Object.keys(showFileData.value).length)
+const showAll = ref(false)
 
 function handleShowFile(data: { version: string, ispassed: boolean }) {
     const { version, ispassed } = data
@@ -45,6 +46,10 @@ function handleShowFile(data: { version: string, ispassed: boolean }) {
 
 function goHome() {
     router.push('/')
+}
+
+function toggleShowAll() {
+    showAll.value = !showAll.value
 }
 
 onBeforeMount(async () => {
@@ -77,7 +82,9 @@ onBeforeMount(async () => {
         :show-file-data="showFileData">
     </ShowFile>
     <br>
-    <Overview :detect-result="detectResult"></Overview>
+    <button @click="toggleShowAll">{{ showAll ? '隱藏全部' : '查看全部' }}</button>
+    <br>
+    <ShowAll v-if="showAll" :detect-result="detectResult"></ShowAll>
     <br>
     <button @click="goHome">回到檢測首頁</button>
 </template>
