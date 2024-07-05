@@ -1,0 +1,27 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* 隱藏超出範圍的內容 */
+  box-sizing: border-box; /* 邊框和內邊距不會增加元素的總大小 */
+}
+
+body {
+  position: relative; /* 為了定位偽元素 */
+  z-index: 1;
+}
+
+body::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-image: url('../assets/background.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: bottom right;
+  width: 50%;
+  height: 50%;
+  opacity: 0.5;
+  z-index: -1;
+}
