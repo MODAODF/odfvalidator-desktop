@@ -55,7 +55,6 @@ export default class {
   }
 
   public static async checkPlatformAndOdfvalidatorPathHandler(): Promise<string | null> {
-    const platform: string = process.platform
     const storeedOdfvalidatorPath: string | undefined = getOdfvalidatorPathFromElectronStore()
 
     // Use the stored path if it exists
@@ -63,21 +62,10 @@ export default class {
       return storeedOdfvalidatorPath
     }
 
-    let odftoolkitPath: string
-
-    // FIXME: Not working on Windows
-    if (platform === 'win32') {
-      odftoolkitPath = 'C:\\odftoolkit'
-    } else {
-      // For Unix-like OS
-      odftoolkitPath = '/usr/local/odftoolkit'
-    }
-
-    const fileNamePattern: string = 'odfvalidator-*-jar-with-dependencies.jar'
-    const searchPattern: string = path.join(odftoolkitPath, fileNamePattern)
+    const odftoolkitPath: string = path.join(__dirname, '../../public/libs/odfvalidator-0.12.0-jar-with-dependencies.jar')
 
     try {
-      const files: string[] = await glob(searchPattern, {windowsPathsNoEscape:true})
+      const files: string[] = await glob(odftoolkitPath, {windowsPathsNoEscape:true})
       saveOdfvalidatorPathToElectronStore(files[0])
       return files[0]
     } catch (error) {
