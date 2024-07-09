@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons'
-import { ref, Ref } from 'vue'
+import { ref, Ref, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 
 const dragFileList: Ref<File[]> = ref([])
 const uploaded = ref<boolean>(false)
 const router = useRouter()
+const detectBtn = ref<HTMLElement | null>(null)
 
 function selectFiles() {
   const fileInput: HTMLInputElement = document.createElement('input')
@@ -21,6 +22,7 @@ function selectFiles() {
       if (dragFileList.value.length > 0) uploaded.value = true
     }
     document.body.removeChild(fileInput)
+    scrollToDetectBtn()
   }
 }
 
@@ -30,7 +32,10 @@ function drop(e: DragEvent) {
   console.log('Drop')
   if (!e.dataTransfer?.files) return
   dragFileList.value = Array.from(e.dataTransfer.files)
-  if (dragFileList.value.length > 0) uploaded.value = true
+  if (dragFileList.value.length > 0) {
+    uploaded.value = true
+    scrollToDetectBtn()
+  }
 }
 
 function dragOver(e: DragEvent) {
@@ -52,9 +57,15 @@ async function detectFile(e: MouseEvent) {
   try {
     const response: string | null = await window.api.detectFile(pathList)
     router.push({ name: 'Report', query: { detectResult: JSON.stringify(response) } })
+    window.scrollTo(0, 0)
   } catch (error) {
     console.error('An error occurred while detecting file:', error)
   }
+}
+
+async function scrollToDetectBtn() {
+  await nextTick()
+  detectBtn.value?.scrollIntoView({ behavior: 'smooth' })
 }
 </script>
 
@@ -72,14 +83,14 @@ async function detectFile(e: MouseEvent) {
     </div>
     <div v-if="uploaded" class="m-5">
       <div class="upload-filelist text-start">
-        <p class="fs-5">已成功上傳的檔案：</p>
+        <p class="fs-5">已選取的檔案：</p>
         <ol>
           <li v-for="(dragFile, key) in dragFileList" :key="key">
             {{ dragFile['name'] }}
           </li>
         </ol>
       </div>
-      <button @click="detectFile" class="btn button-detect mt-3">開始檢測</button>
+      <button @click="detectFile" class="btn button-detect mt-3" ref="detectBtn">開始檢測</button>
     </div>
   </div>
 </template>
