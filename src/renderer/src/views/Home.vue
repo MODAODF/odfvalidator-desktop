@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import JavaChecker from '../components/JavaChecker.vue'
-import FileSelector from '../components/FileSelector.vue'
+// import FileSelector from '../components/FileSelector.vue'
 import DragFile from '../components/DragFile.vue'
 import { useEnvironmentStore } from '@renderer/stores/environment'
 
@@ -9,8 +9,8 @@ const environment = useEnvironmentStore()
 
 <template>
   <JavaChecker />
-  <FileSelector v-if="environment.javaInstalled" />
-  <DragFile v-if="environment.javaInstalled && environment.odfvalidatorPathSpecified" />
+  <!-- <FileSelector v-if="environment.javaInstalled" /> -->
+  <DragFile v-if="environment.javaInstalled" class="mt-5"/>
 </template>
 
 <style>

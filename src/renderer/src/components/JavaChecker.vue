@@ -13,7 +13,7 @@ onMounted(async () => {
   console.log(response)
   javaInstalled.value = response
   if (!javaInstalled.value) {
-    javaDescription.value = 'Java is not installed. Please install Java to use this application.'
+    javaDescription.value = '執行 Java 環境的套件尚未安裝，請安裝套件後繼續使用 ODF 格式驗證工具'
   } else {
     javaDescription.value = javaInstalled.value as string
     javaDescription.value =
@@ -32,12 +32,12 @@ watch(javaInstalled, () => {
 
 <template>
   <div v-if="!javaInstalled">
-    <h1>Java is not installed, or the version is out of date</h1>
+    <h1>Java 執行環境尚未安裝，或版本已過時</h1>
     <p>{{ javaDescription }}</p>
   </div>
 
   <div v-else>
-    <p>Java is already installed</p>
-    <p>Your Java version is: {{ javaDescription }}</p>
+    <p class="fs-4">Java 執行環境已安裝</p>
+    <p class="fs-4">您執行 Java 環境的套件及版本：{{ javaDescription }}</p>
   </div>
 </template>
