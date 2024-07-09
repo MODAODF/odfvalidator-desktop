@@ -26,11 +26,11 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="table-container">
+    <div>
         <span>
-            <p class="detect-overview">
+            <p>
                 檢驗檔案總數：
-                <span class="detect-success">{{ totalPassed + totalFailed }}</span>
+                <span>{{ totalPassed + totalFailed }}</span>
                 ， 符合數：
                 <span class="detect-success">{{ totalPassed }}</span>
                 ， 不符合數：
@@ -39,9 +39,9 @@ onMounted(async () => {
                 <span :class="(totalPassed / (totalPassed + totalFailed)) > 0.5 ? 'detect-success' : 'detect-fail'">{{ `${Math.floor(totalPassed / (totalPassed + totalFailed) * 100)} %` }}</span>
             </p>
         </span>
-        <table class="detect-table">
+        <table>
             <thead>
-                <tr class="table-items">
+                <tr>
                     <th>檢測標準</th>
                     <th>ODF 1.1</th>
                     <th>ODF 1.2</th>
@@ -50,7 +50,7 @@ onMounted(async () => {
                 </tr>
             </thead>
             <tbody>
-                <tr class="table-success">
+                <tr>
                     <td>符合</td>
                     <td v-for="(count, version) in props.passedCount" :key="version">
                         {{ count }}
@@ -58,7 +58,7 @@ onMounted(async () => {
                     </td>
                     <td>N/A</td>
                 </tr>
-                <tr class="table-fail">
+                <tr>
                     <td>不符合</td>
                     <td v-for="(count, version) in props.failedCount" :key="version">
                         {{ count }}
@@ -71,37 +71,5 @@ onMounted(async () => {
 </template>
 
 <style>
-.table-container {
-    margin: 0 auto;
-    width: 80%;
-}
 
-.detect-overview {
-    font-weight: bold;
-    font-size: 20px;
-}
-
-.detect-table {
-    border: 1px solid #000;
-    border-collapse: collapse;
-    width: 100%;
-}
-
-.detect-table th, .detect-table td {
-    padding: 5px 20px;
-    text-align: left;
-    border: 1px solid #000;
-}
-
-.table-items {
-    background-color: #F2EEE5
-}
-
-.table-success {
-    background-color: #c9decf;
-}
-
-.table-fail {
-    background-color: #e4a99b;
-}
 </style>

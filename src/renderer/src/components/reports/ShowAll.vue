@@ -9,7 +9,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="detect-content">
+    <div>
         <ol>
             <li v-for="(detectInfo, path) in props.detectResult" :key="path" class="detect-list">
                 <span v-for="(value, key) in detectInfo" :key="key">
@@ -29,23 +29,4 @@ const props = defineProps({
 </template>
 
 <style>
-.detect-content {
-    margin-left: 50px;
-}
-
-.detect-list {
-    text-align: left;
-}
-
-.detect-success {
-    color: green;
-}
-
-.detect-fail {
-    color: red;
-}
-
-.detect-canfix {
-    color: blue;
-}
 </style>
