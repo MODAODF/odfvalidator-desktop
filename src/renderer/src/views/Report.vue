@@ -71,7 +71,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-    <Table
+    <Table class="d-flex flex-column align-items-center"
         :passed-count="passedCount"
         :failed-count="failedCount"
         @show-file="handleShowFile">
