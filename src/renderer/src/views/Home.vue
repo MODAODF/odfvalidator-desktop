@@ -13,7 +13,7 @@ const environment = useEnvironmentStore()
   <DragFile v-if="environment.javaInstalled" class="mt-5"/>
 </template>
 
-<style>
+<style lang="scss">
 :root {
   background-color: #f7fafc;
   color: #282828;

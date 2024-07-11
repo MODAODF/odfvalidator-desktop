@@ -25,3 +25,30 @@ body::after {
   opacity: 0.5;
   z-index: -1;
 }
+
+body .btn__light {
+  background-color: rgb(248, 234, 73);
+  border-radius: 10px;
+  letter-spacing: 3px;
+  padding: 3px 15px 3px 18px;
+  transition: all 200ms;
+}
+body .btn__light:hover {
+  color: white;
+  background-color: rgb(124, 134, 141);
+}
+
+body .btn__dark {
+  color: white;
+  background-color: rgb(124, 134, 141);
+  border-radius: 10px;
+  letter-spacing: 3px;
+  padding: 3px 10px 3px 13px;
+  transition: all 200ms;
+}
+body .btn__dark:hover {
+  color: rgb(124, 134, 141);
+  background-color: rgb(247, 250, 252);
+  border: 2px solid rgb(124, 134, 141);
+  box-shadow: 1px 2px 3px rgb(195, 193, 186, 0.3);
+}

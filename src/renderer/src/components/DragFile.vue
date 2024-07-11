@@ -70,9 +70,9 @@ async function scrollToDetectBtn() {
 </script>
 
 <template>
-  <div class="file-catcher-container">
+  <div class="file__catcher__container">
     <div
-      class="file-catcher"
+      class="file__catcher"
       @click="selectFiles"
       @drop="drop"
       @dragleave.self.stop="dragLeave"
@@ -82,7 +82,7 @@ async function scrollToDetectBtn() {
       <h3>點擊選擇檔或拖曳置區域</h3>
     </div>
     <div v-if="uploaded" class="m-5">
-      <div class="upload-filelist text-start">
+      <div class="upload__filelist text-start">
         <p class="fs-5">已選取的檔案：</p>
         <ol>
           <li v-for="(dragFile, key) in dragFileList" :key="key">
@@ -90,20 +90,20 @@ async function scrollToDetectBtn() {
           </li>
         </ol>
       </div>
-      <button @click="detectFile" class="btn button-detect mt-3" ref="detectBtn">開始檢測</button>
+      <button @click="detectFile" class="btn btn__light mt-3" ref="detectBtn">開始檢測</button>
     </div>
   </div>
 </template>
 
-<style scoped>
-.file-catcher-container {
+<style lang="scss">
+.file__catcher__container {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
 }
 
-.file-catcher {
+.file__catcher {
   border: 2px dashed rgb(211, 211, 211);
   border-radius: 20px;
   padding: 36px 48px;
@@ -115,38 +115,23 @@ async function scrollToDetectBtn() {
   background-color: white;
 }
 
-.file-catcher,
-.file-catcher:deep {
+.file__catcher,
+.file__catcher:deep {
   cursor: pointer;
   transition: all 200ms;
 }
 
-.file-catcher:hover,
-.file-catcher:deep(:hover) {
+.file__catcher:hover,
+.file__catcher:deep(:hover) {
   color: rgb(255, 165, 0, 0.75);
   border-color: rgb(255, 166, 0, 0.75);
 }
 
-.upload-filelist {
+.upload__filelist {
   width: 500px;
   background-color:  rgba(255, 255, 255, 0.75);
   border-radius: 10px;
   padding: 30px 50px 15px 50px;
   box-shadow: 3px 4px 10px rgba(0, 0, 0, 0.05);
-}
-
-.button-detect {
-  background-color: rgb(248, 234, 73);
-  border: none;
-  border-radius: 5px;
-  padding: 10px 15px;
-  cursor: pointer;
-  transition: all 200ms;
-  letter-spacing: 2px;
-}
-
-.button-detect:hover {
-  color: white;
-  background-color: rgb(124, 134, 141);
 }
 </style>

@@ -13,7 +13,7 @@ const props = defineProps({
         <ol>
             <li v-for="(detectInfo, path) in props.detectResult" :key="path" class="detect-list">
                 <span v-for="(value, key) in detectInfo" :key="key">
-                    <b :class="value[0].standard ? 'detect-success' : 'detect-fail'">
+                    <b :class="value[0].standard ? 'detect__success' : 'detect__fail'">
                         {{ value[1].msg }}
                     </b>
                     <p>儲存的 ODF 格式版本：{{ value[2].rootDocVersion || '未知' }}</p>

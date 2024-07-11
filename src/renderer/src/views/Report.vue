@@ -76,25 +76,24 @@ onBeforeMount(async () => {
         :failed-count="failedCount"
         @show-file="handleShowFile">
     </Table>
-    <br>
+    <div>
+        <button class="btn btn__dark m-4" @click="toggleShowAll">{{ showAll ? '隱藏全部' : '查看全部' }}</button>
+    </div>
     <ShowFile
         v-if="showFileDataLength > 0"
         :show-file-data="showFileData">
     </ShowFile>
     <br>
-    <button @click="toggleShowAll">{{ showAll ? '隱藏全部' : '查看全部' }}</button>
-    <br>
     <ShowAll v-if="showAll" :detect-result="detectResult"></ShowAll>
     <br>
     <button @click="goHome">回到檢測首頁</button>
 </template>
+<style lang="scss">
+.detect__success {
+    color: green;
+}
 
-<style>
-    .detect-success {
-        color: green;
-    }
-
-    .detect-fail {
-        color: red;
-    }
+.detect__fail {
+    color: red;
+}
 </style>
