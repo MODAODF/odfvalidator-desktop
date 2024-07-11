@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onBeforeMount, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import ShowAll from '../components/reports/ShowAll.vue'
 import Table from '../components/reports/Table.vue'
 import ShowFile from '../components/reports/ShowFile.vue'
 
@@ -78,13 +77,12 @@ onBeforeMount(async () => {
     </Table>
     <div>
         <button class="btn btn__dark m-4" @click="toggleShowAll">{{ showAll ? '隱藏全部' : '查看全部' }}</button>
+        <button class="btn btn__light">匯出</button>
     </div>
     <ShowFile
         v-if="showFileDataLength > 0"
         :show-file-data="showFileData">
     </ShowFile>
-    <br>
-    <ShowAll v-if="showAll" :detect-result="detectResult"></ShowAll>
     <br>
     <button @click="goHome">回到檢測首頁</button>
 </template>
