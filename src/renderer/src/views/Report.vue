@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeMount, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import Table from '../components/reports/Table.vue'
+import ResultTable from '../components/reports/ResultTable.vue'
 import ShowFile from '../components/reports/ShowFile.vue'
 
 let passed: Record<string, any[]> = {
@@ -70,11 +70,11 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-    <Table class="d-flex flex-column align-items-center"
+    <ResultTable class="d-flex flex-column align-items-center"
         :passed-count="passedCount"
         :failed-count="failedCount"
         @show-file="handleShowFile">
-    </Table>
+    </ResultTable>
     <div>
         <button class="btn btn__dark m-4" @click="toggleShowAll">{{ showAll ? '隱藏全部' : '查看全部' }}</button>
         <button class="btn btn__light">匯出</button>
