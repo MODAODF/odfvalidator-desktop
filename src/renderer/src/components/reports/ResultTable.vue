@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue"
 
-
 const props = defineProps({
     passedCount: {
         type: Object
@@ -39,7 +38,7 @@ onMounted(async () => {
                 <span :class="(totalPassed / (totalPassed + totalFailed)) > 0.5 ? 'detect__success' : 'detect__fail'">{{ `${Math.floor(totalPassed / (totalPassed + totalFailed) * 100)} %` }}</span>
             </p>
         </span>
-        <table class="overview__table w-75">
+        <table class="table__dark w-75">
             <thead>
                 <tr>
                     <th>檢測標準</th>
@@ -58,7 +57,7 @@ onMounted(async () => {
                 </tr>
             </thead>
             <tbody>
-                <tr class="passed">
+                <tr>
                     <td>符合</td>
                     <td v-for="(count, version) in props.passedCount" :key="version">
                         <div>
@@ -70,7 +69,7 @@ onMounted(async () => {
                     </td>
                     <td>N/A</td>
                 </tr>
-                <tr class="failed">
+                <tr>
                     <td>建議修改</td>
                     <td v-for="(count, version) in props.failedCount" :key="version">
                         <div>
@@ -87,92 +86,4 @@ onMounted(async () => {
 </template>
 
 <style lang="scss">
-.report__contain {
-    font-size: 1.1rem;
-    letter-spacing: 1.2px;
-}
-
-.overview__table {
-    border-collapse: separate;
-    border-spacing: 0;
-    border: 1px solid rgb(211, 211, 211);
-    border-radius: 20px;
-    box-shadow: 2px 3px 5px rgba(195, 193, 186, 0.3);
-    max-width: 1000px;
-
-    thead {
-        color: white;
-        background-color: rgb(124, 134, 141);
-
-        th {
-            padding: 20px 15px;
-            position: relative;
-
-            &:not(:last-child)::after {
-                content: "";
-                position: absolute;
-                right: 0;
-                top: 15%;
-                bottom: 15%;
-                width: 3px;
-                background-color: white;
-            }
-
-            &:first-child {
-                border-top-left-radius: 20px;
-            }
-            &:last-child {
-                border-top-right-radius: 20px;
-            }
-        }
-    }
-
-    tbody {
-        background-color: white;
-
-        tr {
-            position: relative;
-
-            &:not(:last-child)::after {
-                content: "";
-                position: absolute;
-                left: 3%;
-                right: 3%;
-                bottom: 0;
-                border-bottom: 3px solid rgb(211, 211, 211);
-            }
-
-            &.passed :not(:last-child)::after,
-            &.failed :not(:last-child)::after {
-                content: "";
-                position: absolute;
-                right: 0;
-                width: 3px;
-                background-color: rgb(211, 211, 211);
-            }
-
-            &.passed :not(:last-child)::after {
-                top: 10%;
-                bottom: 0%;
-            }
-
-            &.failed :not(:last-child)::after {
-                top: 0%;
-                bottom: 10%;
-            }
-
-            td {
-                padding: 20px 0px;
-                position: relative;
-
-                &:first-child {
-                    border-bottom-left-radius: 20px;
-                }
-                &:last-child {
-                    border-bottom-right-radius: 20px;
-                }
-            }
-        }
-    }
-}
 </style>

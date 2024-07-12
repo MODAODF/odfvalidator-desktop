@@ -3,6 +3,7 @@ import { onBeforeMount, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ResultTable from '../components/reports/ResultTable.vue'
 import ShowFile from '../components/reports/ShowFile.vue'
+import '../styles/tableStyles.css'
 
 let passed: Record<string, any[]> = {
     '1.1': [],
@@ -30,14 +31,14 @@ let failedCount: Record<string, number> = {
 const route = useRoute()
 const router = useRouter()
 const detectResult: Array<{ [key: string]: any[]}> = JSON.parse(route.query.detectResult as string)
-const showFileData = ref({})
-const showFileDataLength = computed(() => Object.keys(showFileData.value).length)
+const filelistData = ref({})
+const filelistDataLength = computed(() => Object.keys(filelistData.value).length)
 const showAll = ref(false)
 
 function handleShowFile(data: { version: string, ispassed: boolean }) {
     const { version, ispassed } = data
     const newData = ispassed ? passed[version] : failed[version]
-    showFileData.value = {
+    filelistData.value = {
         [version]: newData,
         'ispassed': ispassed
     }
@@ -80,8 +81,8 @@ onBeforeMount(async () => {
         <button class="btn btn__light">匯出</button>
     </div>
     <ShowFile
-        v-if="showFileDataLength > 0"
-        :show-file-data="showFileData">
+        v-if="filelistDataLength > 0"
+        :filelist-data="filelistData">
     </ShowFile>
     <br>
     <button @click="goHome">回到檢測首頁</button>

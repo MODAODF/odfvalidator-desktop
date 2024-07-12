@@ -1,0 +1,93 @@
+.table__dark {
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid rgb(211, 211, 211);
+    border-radius: 20px;
+    box-shadow: 2px 3px 5px rgba(195, 193, 186, 0.3);
+    max-width: 1000px;
+}
+
+.table__dark thead {
+    color: white;
+    background-color: rgb(124, 134, 141);
+}
+
+.table__dark thead th {
+    padding: 20px 15px;
+    position: relative;
+}
+
+.table__dark thead th:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 15%;
+    bottom: 15%;
+    width: 3px;
+    background-color: white;
+}
+
+.table__dark thead th:first-child {
+    border-top-left-radius: 20px;
+}
+
+.table__dark thead th:last-child {
+    border-top-right-radius: 20px;
+}
+
+.table__dark tbody {
+    background-color: white;
+}
+
+.table__dark tbody tr {
+    position: relative;
+}
+
+.table__dark tbody tr:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: 3%;
+    right: 3%;
+    bottom: 0;
+    border-bottom: 3px solid rgb(211, 211, 211);
+}
+
+.table__dark tbody tr td {
+    padding: 20px 0px;
+    position: relative;
+}
+
+.table__dark tbody tr td:first-child {
+    border-bottom-left-radius: 20px;
+}
+
+.table__dark tbody tr td:last-child {
+    border-bottom-right-radius: 20px;
+}
+
+.table__dark tbody tr:not(:first-child):not(:last-child) td:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 0%;
+    bottom: 0%;
+    right: 0;
+    border-right: 3px solid rgb(211, 211, 211);
+}
+
+.table__dark tbody tr:first-child td:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 10%;
+    bottom: 0%;
+    right: 0;
+    border-right: 3px solid rgb(211, 211, 211);
+}
+
+.table__dark tbody tr:last-child td:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 0%;
+    bottom: 10%;
+    right: 0;
+    border-right: 3px solid rgb(211, 211, 211);
+}
