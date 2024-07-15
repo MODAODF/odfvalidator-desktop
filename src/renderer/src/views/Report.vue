@@ -2,8 +2,8 @@
 import { onBeforeMount, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ResultTable from '../components/reports/ResultTable.vue'
-import ShowFile from '../components/reports/ShowFile.vue'
 import '../styles/tableStyles.css'
+import FilelistTable from '../components/reports/FilelistTable.vue'
 
 let passed: Record<string, any[]> = {
     '1.1': [],
@@ -80,10 +80,10 @@ onBeforeMount(async () => {
         <button class="btn btn__dark m-4" @click="toggleShowAll">{{ showAll ? '隱藏全部' : '查看全部' }}</button>
         <button class="btn btn__light">匯出</button>
     </div>
-    <ShowFile
+    <FilelistTable class="d-flex flex-column align-items-center"
         v-if="filelistDataLength > 0"
         :filelist-data="filelistData">
-    </ShowFile>
+    </FilelistTable>
     <br>
     <button @click="goHome">回到檢測首頁</button>
 </template>
