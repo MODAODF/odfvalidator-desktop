@@ -57,11 +57,12 @@
     position: relative;
 }
 
-.table__dark tbody tr td:first-child {
+
+.table__dark tbody tr:last-child td:first-child {
     border-bottom-left-radius: 20px;
 }
 
-.table__dark tbody tr td:last-child {
+.table__dark tbody tr:last-child td:last-child {
     border-bottom-right-radius: 20px;
 }
 
