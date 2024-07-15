@@ -85,5 +85,12 @@ onMounted(async () => {
     </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.detect__success {
+    color: green;
+}
+
+.detect__fail {
+    color: red;
+}
 </style>

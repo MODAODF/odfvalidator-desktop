@@ -95,7 +95,7 @@ async function scrollToDetectBtn() {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .file__catcher__container {
   display: flex;
   flex-direction: column;
@@ -113,18 +113,12 @@ async function scrollToDetectBtn() {
   position: relative;
   color: rgb(211, 211, 211);
   background-color: white;
-}
-
-.file__catcher,
-.file__catcher:deep {
-  cursor: pointer;
   transition: all 200ms;
-}
 
-.file__catcher:hover,
-.file__catcher:deep(:hover) {
-  color: rgb(255, 165, 0, 0.75);
-  border-color: rgb(255, 166, 0, 0.75);
+  &:hover {
+    color: rgb(255, 165, 0, 0.75);
+    border-color: rgb(255, 166, 0, 0.75);
+  }
 }
 
 .upload__filelist {

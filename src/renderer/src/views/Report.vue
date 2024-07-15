@@ -87,12 +87,5 @@ onBeforeMount(async () => {
     <br>
     <button @click="goHome">回到檢測首頁</button>
 </template>
-<style lang="scss">
-.detect__success {
-    color: green;
-}
-
-.detect__fail {
-    color: red;
-}
+<style lang="scss" scoped>
 </style>
