@@ -59,5 +59,11 @@
     "vite": "^5.0.12",
     "vue": "^3.4.15",
     "vue-tsc": "^1.8.27"
-  }
+  },
+  "build": {
+        "asarUnpack": [
+            "node_modules/java-bridge/**",
+            "node_modules/java-bridge-*/**"
+        ]
+    }
 }
