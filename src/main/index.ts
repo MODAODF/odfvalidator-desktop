@@ -59,8 +59,13 @@ app.whenReady().then(() => {
     Handlers.checkPlatformAndOdfvalidatorPathHandler
   )
   ipcMain.handle('detect-file', async (_, pathList) => {
+    console.log('IPC sending data:', JSON.stringify(pathList, null, 2))
     return await Handlers.detectFileHandler(pathList)
   })
+  // ipcMain.handle('run-odfdom-check', async (_, filePath) => {
+  //   console.log('IPC sending data:', JSON.stringify(filePath, null, 2))
+  //   return await Handlers.handleOdfdomCheck(filePath)
+  // })
 
   createWindow()
 

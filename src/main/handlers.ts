@@ -7,6 +7,8 @@ import Store from 'electron-store'
 import os from 'os'
 import crypto from 'crypto'
 import rimraf from 'rimraf'
+import { runOdfdomCheck } from '../odfdomchecker/odfdomchecker'
+import { OdfdomCheckResult } from '../odfdomchecker/type'
 
 const store = new Store()
 const execPromise = util.promisify(exec)
@@ -62,10 +64,13 @@ export default class {
       return storeedOdfvalidatorPath
     }
 
-    const odftoolkitPath: string = path.join(__dirname, '../../public/libs/odfvalidator-0.12.0-jar-with-dependencies.jar')
+    const odftoolkitPath: string = path.join(
+      __dirname,
+      '../../public/libs/odfvalidator-0.12.0-jar-with-dependencies.jar'
+    )
 
     try {
-      const files: string[] = await glob(odftoolkitPath, {windowsPathsNoEscape:true})
+      const files: string[] = await glob(odftoolkitPath, { windowsPathsNoEscape: true })
       saveOdfvalidatorPathToElectronStore(files[0])
       return files[0]
     } catch (error) {
@@ -76,35 +81,52 @@ export default class {
 
   public static async detectFileHandler(pathList: string[]): Promise<object[] | null> {
     const platform: string = process.platform
-    
+
     let odftoolkitPath: string | undefined = getOdfvalidatorPathFromElectronStore()
 
     if (platform === 'win32') {
-      const odftoolkit: string[] = await glob(odftoolkitPath as string, {windowsPathsNoEscape:true})
+      const odftoolkit: string[] = await glob(odftoolkitPath as string, {
+        windowsPathsNoEscape: true
+      })
       odftoolkitPath = odftoolkit[0]
     }
     const result: object[] = []
 
     for (const filePath of pathList) {
+      console.log(`[DEBUG] 開始處理文件: ${filePath}`)
       const command = `java -jar ${odftoolkitPath} ${filePath} -v -e`
       const fileName = filePath.split('/').pop()
       const rootDocVersionRegex: RegExp = /ODF version of root document: (\d+\.\d+)/
-      const generatorRegex: RegExp = /Info: Generator: ((?:OxOffice\/\w+(\.\d+)*)|(\S+\/\d+(\.\d+)*))/
+      const generatorRegex: RegExp =
+        /Info: Generator: ((?:OxOffice\/\w+(\.\d+)*)|(\S+\/\d+(\.\d+)*))/
       const mediaTypeRegex: RegExp = /Media Type:\s*(.*)/
       try {
         const { stdout } = await execPromise(command)
+        // console.log(`[DEBUG] odfvalidator 檢查結果: ${stdout}`)
         const rootDocVersionMatch: RegExpMatchArray | null = stdout.match(rootDocVersionRegex)
         const generatorMatch: RegExpMatchArray | null = stdout.match(generatorRegex)
+
+        // 執行 ODFDOM 檢查
+        console.log(`[DEBUG] 開始執行 ODFDOM 檢查`)
+        const odfdomResult: OdfdomCheckResult = await this.handleOdfdomCheck(filePath)
+        console.log(`[DEBUG] ODFDOM 檢查結果:`, odfdomResult)
+
         const entry = {
           [filePath]: [
             { standard: true },
             { msg: `${fileName} 檔案符合標準的 ODF 格式` },
             { rootDocVersion: rootDocVersionMatch ? rootDocVersionMatch[1] : undefined },
-            { generator: generatorMatch ? generatorMatch[1] : undefined }
+            { generator: generatorMatch ? generatorMatch[1] : undefined },
+            { layoutGridHasIssue: odfdomResult.layoutGrid.hasIssue },
+            { pageBreakHasIssue: odfdomResult.pageBreak.hasIssue },
+            { spaceHasIssue: odfdomResult.space.hasIssue }
           ]
-        };
+        }
+        console.log('[DEBUG] Entry before push:', JSON.stringify(entry, null, 2))
         result.push(entry)
+        console.log('[DEBUG] Result after push:', JSON.stringify(result, null, 2))
       } catch (error: Error | any) {
+        console.error(`[ERROR] 檢測文件時發生錯誤:`, error)
         const errMsg = error.stdout
         const rootDocVersionMatch: RegExpMatchArray | null = errMsg.match(rootDocVersionRegex)
 
@@ -130,29 +152,40 @@ export default class {
           // remove the temporary directory
           this.rmTmpDir(tmpDir as string)
 
+          // 即使文件不符合標準，我們仍然執行 ODFDOM 檢查
+          console.log(`[DEBUG] 開始執行 ODFDOM 檢查（非標準文件）`)
+          const odfdomResult: OdfdomCheckResult = await this.handleOdfdomCheck(filePath)
+          console.log(`[DEBUG] ODFDOM 檢查結果（非標準文件）:`, odfdomResult)
+
           const entry = {
             [filePath]: [
               { standard: false },
               { msg: `${fileName} 檔案不符合標準的 ODF 格式` },
               { rootDocVersion: rootDocVersionMatch ? rootDocVersionMatch[1] : undefined },
               { generator: generatorMatch ? generatorMatch[1] : undefined },
-              { canFix: canFix }
+              { canFix: canFix },
+              { layoutGridHasIssue: odfdomResult.layoutGrid.hasIssue },
+              { pageBreakHasIssue: odfdomResult.pageBreak.hasIssue },
+              { spaceHasIssue: odfdomResult.space.hasIssue }
             ]
           }
           result.push(entry)
         } else {
+          // 非 ODF 文件
           const entry = {
             [filePath]: [
               { standard: false },
               { msg: `${fileName} 檔案非 ODF 文件格式` },
               { rootDocVersion: undefined },
-              { generator: undefined }
+              { generator: undefined },
+              { odfdomCheck: null } // 不執行 ODFDOM 檢查
             ]
           }
           result.push(entry)
         }
       }
     }
+    console.log(`[DEBUG] 所有文件處理完成，結果:`, JSON.stringify(result, null, 2))
     return result
   }
 
@@ -191,6 +224,21 @@ export default class {
       return true
     } catch {
       return false
+    }
+  }
+
+  public static async handleOdfdomCheck(filePath: string): Promise<OdfdomCheckResult> {
+    console.log(`[DEBUG] handleOdfdomCheck 開始處理文件: ${filePath}`)
+    try {
+      console.log('[DEBUG] 調用 runOdfdomCheck')
+      const result = await runOdfdomCheck(filePath)
+      console.log('[DEBUG] runOdfdomCheck 完成，結果:', JSON.stringify(result, null, 2))
+      return result
+    } catch (error) {
+      console.error('[ERROR] ODFDOM 檢查時發生錯誤：', error)
+      throw error
+    } finally {
+      console.log('[DEBUG] handleOdfdomCheck 處理完成')
     }
   }
 }

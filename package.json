@@ -32,8 +32,11 @@
     "bootstrap": "^5.3.3",
     "electron-store": "^8.2.0",
     "electron-updater": "^6.1.7",
+    "fs": "^0.0.1-security",
     "glob": "^10.3.10",
+    "java-bridge": "^2.6.0",
     "os": "^0.1.2",
+    "path": "^0.12.7",
     "pinia": "^2.1.7",
     "rimraf": "^5.0.5",
     "vue-router": "^4.3.0"
@@ -61,9 +64,9 @@
     "vue-tsc": "^1.8.27"
   },
   "build": {
-        "asarUnpack": [
-            "node_modules/java-bridge/**",
-            "node_modules/java-bridge-*/**"
-        ]
-    }
+    "asarUnpack": [
+      "node_modules/java-bridge/**",
+      "node_modules/java-bridge-*/**"
+    ]
+  }
 }
