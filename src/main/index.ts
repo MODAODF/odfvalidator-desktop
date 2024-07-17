@@ -7,7 +7,7 @@ import icon from '../../resources/icon.png?asset'
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
+    width: 1000,
     height: 670,
     show: false,
     icon: join(__dirname, '../../public/icons/icon.ico'),
