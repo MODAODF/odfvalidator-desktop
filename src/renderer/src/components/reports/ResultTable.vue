@@ -38,20 +38,18 @@ onMounted(async () => {
                 <span :class="(totalPassed / (totalPassed + totalFailed)) > 0.5 ? 'detect__success' : 'detect__fail'">{{ `${Math.floor(totalPassed / (totalPassed + totalFailed) * 100)} %` }}</span>
             </p>
         </span>
-        <table class="table__dark w-75">
+        <table class="table__dark table__overview">
             <thead>
                 <tr>
                     <th>檢測標準</th>
                     <th>ODF 1.1</th>
-                    <th>ODF 1.2</th>
                     <th>
                         ODF 1.2
-                        <div class="fs-6">extended</div>
+                        <div>包含extended</div>
                     </th>
-                    <th>ODF 1.3</th>
                     <th>
                         ODF 1.3
-                        <div class="fs-6">extended</div>
+                        <div>包含extended</div>
                     </th>
                     <th>未知</th>
                 </tr>
@@ -93,4 +91,21 @@ onMounted(async () => {
 .detect__fail {
     color: red;
 }
+
+.table__overview {
+    width: 75%;
+
+    & thead tr th div {
+        font-size: 0.9rem;
+    }
+
+    & tbody tr {
+        height: 100px;
+        
+        & td {
+            width: 20%
+        }
+    }
+}
+
 </style>

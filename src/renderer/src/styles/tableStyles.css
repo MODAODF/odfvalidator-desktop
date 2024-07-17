@@ -35,10 +35,6 @@
     border-top-right-radius: 20px;
 }
 
-.table__dark tbody {
-    background-color: white;
-}
-
 .table__dark tbody tr {
     position: relative;
 }
@@ -55,8 +51,8 @@
 .table__dark tbody tr td {
     padding: 20px 0px;
     position: relative;
+    background-color: white;
 }
-
 
 .table__dark tbody tr:last-child td:first-child {
     border-bottom-left-radius: 20px;
