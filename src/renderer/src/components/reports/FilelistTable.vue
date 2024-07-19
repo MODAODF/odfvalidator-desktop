@@ -48,7 +48,6 @@ watch(() => props.filelistData, (newVal: object) => {
 })
 
 let title = computed(() => {
-    if (!version.value) return '全部受檢測的檔案：'
     if (version.value === 'undefined') return '無法檢測的檔案：'
     return ispassed.value ? `符合 ODF ${version.value} 標準的檔案：` : `不符合 ODF ${version.value} 標準的檔案列表：`
 })

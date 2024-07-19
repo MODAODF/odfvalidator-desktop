@@ -10,12 +10,28 @@ const props = defineProps({
     }
 })
 
-const emit = defineEmits(['show-file'])
+const emit = defineEmits(['show-file', 'init-show-file-btns', 'clear-show-file'])
 const totalPassed = ref<number>(0)
 const totalFailed = ref<number>(0)
 
-function showFile(version: string, ispassed: boolean) {
-    emit('show-file', { version, ispassed})
+function showFile(version: string, ispassed: boolean): void {
+    const selectedBtn = document.querySelector<HTMLElement>(`#${ispassed ? 'passed' : 'failed'}-${version.replace(/\./g, '\\.')}`)
+    const btnVal: string = selectedBtn?.textContent?.trim() ?? '';
+    
+    if (selectedBtn) {
+        if (btnVal === '收起') {
+            emit('clear-show-file')
+            selectedBtn.textContent = '查看'
+            selectedBtn.classList.remove('btn__light')
+            selectedBtn.classList.add('btn__dark')
+        } else if (btnVal === '查看') {
+            emit('show-file', { version, ispassed })
+            emit('init-show-file-btns')
+            selectedBtn.textContent = '收起'
+            selectedBtn.classList.remove('btn__dark')
+            selectedBtn.classList.add('btn__light')
+        }
+    }
 }
 
 onMounted(async () => {
@@ -61,8 +77,10 @@ onMounted(async () => {
                         <div>
                             {{ count }}
                         </div>
-                        <button v-if="count > 0" class="btn btn__dark mt-1" @click="showFile(version, true)">
-                            查看
+                        <button v-if="count > 0"
+                            class="btn btn__dark mt-1"
+                            :id="`passed-${version}`"
+                            @click="showFile(version, true)">查看
                         </button>
                     </td>
                     <td>N/A</td>
@@ -73,8 +91,10 @@ onMounted(async () => {
                         <div>
                             {{ count }}
                         </div>
-                        <button v-if="count > 0" class="btn btn__dark mt-1" @click="showFile(version, false)">
-                            查看
+                        <button v-if="count > 0"
+                            class="btn btn__dark mt-1"
+                            :id="`failed-${version}`"
+                            @click="showFile(version, false)">查看
                         </button>
                     </td>
                 </tr>
