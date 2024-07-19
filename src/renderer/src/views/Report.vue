@@ -146,7 +146,7 @@ onBeforeMount(async () => {
         :filelist-data="filelistData">
     </FilelistTable>
     <br>
-    <button class="btn btn__dark my-3 mb-5" @click="goHome">回到檢測首頁</button>
+    <button class="btn btn__dark my-3 mb-5" @click="goHome">檢測其他檔案</button>
 </template>
 <style lang="scss" scoped>
 </style>
