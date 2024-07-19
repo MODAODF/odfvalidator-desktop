@@ -32,7 +32,7 @@ body .btn__light {
   background-color: rgb(248, 234, 73);
   border-radius: 10px;
   letter-spacing: 3px;
-  padding: 3px 15px 3px 18px;
+  padding: 3px 10px 3px 13px;
   transition: all 200ms;
 }
 body .btn__light:hover {
@@ -49,8 +49,6 @@ body .btn__dark {
   transition: all 200ms;
 }
 body .btn__dark:hover {
-  color: rgb(124, 134, 141);
-  background-color: rgb(247, 250, 252);
-  border: 2px solid rgb(124, 134, 141);
-  box-shadow: 1px 2px 3px rgb(195, 193, 186, 0.3);
+  color: black;
+  background-color: rgb(248, 234, 73);
 }
