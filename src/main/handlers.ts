@@ -122,9 +122,7 @@ export default class {
             { spaceHasIssue: odfdomResult.space.hasIssue }
           ]
         }
-        console.log('[DEBUG] Entry before push:', JSON.stringify(entry, null, 2))
         result.push(entry)
-        console.log('[DEBUG] Result after push:', JSON.stringify(result, null, 2))
       } catch (error: Error | any) {
         console.error(`[ERROR] 檢測文件時發生錯誤:`, error)
         const errMsg = error.stdout
@@ -185,7 +183,6 @@ export default class {
         }
       }
     }
-    console.log(`[DEBUG] 所有文件處理完成，結果:`, JSON.stringify(result, null, 2))
     return result
   }
 
