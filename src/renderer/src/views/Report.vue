@@ -121,7 +121,11 @@ onBeforeMount(async () => {
         const fileData = {
             fileName,
             generator,
-            ...(info[4]?.canFix && { canFix: info[4].canFix })
+            ...(info[4]?.canFix && { canFix: info[4].canFix }),
+            layoutGridHasIssue: info[4].layoutGridHasIssue,
+            pageBreakHasIssue: info[5].pageBreakHasIssue,
+            spaceHasIssue: info[6].spaceHasIssue
+
         }
         info[0].standard ? passed[rootDocVersion].push(fileData) : failed[rootDocVersion].push(fileData)
         info[0].standard ? passedCount[rootDocVersion] += 1 : failedCount[rootDocVersion] += 1
