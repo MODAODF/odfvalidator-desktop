@@ -7,17 +7,17 @@
     max-width: 1000px;
 }
 
-.table__dark thead {
+.table__dark > thead {
     color: white;
     background-color: rgb(124, 134, 141);
 }
 
-.table__dark thead th {
+.table__dark > thead > tr > th {
     padding: 20px 15px;
     position: relative;
 }
 
-.table__dark thead th:not(:last-child)::after {
+.table__dark > thead > tr > th:not(:last-child)::after {
     content: "";
     position: absolute;
     right: 0;
@@ -27,19 +27,19 @@
     background-color: white;
 }
 
-.table__dark thead th:first-child {
+.table__dark > thead > tr > th:first-child {
     border-top-left-radius: 20px;
 }
 
-.table__dark thead th:last-child {
+.table__dark > thead > tr > th:last-child {
     border-top-right-radius: 20px;
 }
 
-.table__dark tbody tr {
+.table__dark > tbody > tr {
     position: relative;
 }
 
-.table__dark tbody tr:not(:last-child)::after {
+.table__dark > tbody > tr:not(:last-child)::after {
     content: "";
     position: absolute;
     left: 3%;
@@ -48,21 +48,21 @@
     border-bottom: 3px solid rgb(211, 211, 211);
 }
 
-.table__dark tbody tr td {
+.table__dark > tbody > tr > td {
     padding: 20px 0px;
     position: relative;
     background-color: white;
 }
 
-.table__dark tbody tr:last-child td:first-child {
+.table__dark > tbody > tr:last-child > td:first-child {
     border-bottom-left-radius: 20px;
 }
 
-.table__dark tbody tr:last-child td:last-child {
+.table__dark > tbody > tr:last-child > td:last-child {
     border-bottom-right-radius: 20px;
 }
 
-.table__dark tbody tr:not(:first-child):not(:last-child) td:not(:last-child)::after {
+.table__dark > tbody > tr:not(:first-child):not(:last-child) > td:not(:last-child)::after {
     content: "";
     position: absolute;
     top: 0%;
@@ -71,7 +71,7 @@
     border-right: 3px solid rgb(211, 211, 211);
 }
 
-.table__dark tbody tr:first-child td:not(:last-child)::after {
+.table__dark > tbody > tr:first-child > td:not(:last-child)::after {
     content: "";
     position: absolute;
     top: 10%;
@@ -80,7 +80,7 @@
     border-right: 3px solid rgb(211, 211, 211);
 }
 
-.table__dark tbody tr:last-child td:not(:last-child)::after {
+.table__dark > tbody > tr:last-child > td:not(:last-child)::after {
     content: "";
     position: absolute;
     top: 0%;
