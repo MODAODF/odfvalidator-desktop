@@ -9,11 +9,16 @@
             </thead>
             <tbody>
                 <tr v-for="(fileData, index) in props.filelistData?.[version]" :key="index">
-                    <td class="text-start ps-4">檔案名稱：{{ fileData.fileName || '未知' }}</td>
+                    <td class="text-start px-4">
+                        <p>檔案名稱：{{ fileData.fileName || '未知' }}</p>
+                        <DetailTable v-if="isShowDetail[index]"
+                            :detail-data="fileData">
+                        </DetailTable>
+                    </td>
                     <td class="w-25">
                         <div class="d-flex align-items-center justify-content-center">
                             <span class="fs-3">A</span>
-                            <button class="btn btn__dark ms-4">
+                            <button class="btn btn__dark ms-4" @click="showDetail(index)">
                                 查看
                             </button>
                         </div>
@@ -26,6 +31,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from "vue"
+import DetailTable from './DetailTable.vue'
 
 const props = defineProps({
     filelistData: {
@@ -36,6 +42,7 @@ const props = defineProps({
 
 const version = ref('')
 const ispassed = ref(false)
+let isShowDetail = ref([] as boolean[])
 
 onMounted(async () => {
     version.value = Object.keys(props.filelistData as object)[0]
@@ -51,6 +58,10 @@ let title = computed(() => {
     if (version.value === 'undefined') return '無法檢測的檔案：'
     return ispassed.value ? `符合 ODF ${version.value} 標準的檔案：` : `不符合 ODF ${version.value} 標準的檔案列表：`
 })
+
+function showDetail(index: number) {
+    isShowDetail.value[index] = !isShowDetail.value[index]
+}
 </script>
 
 <style lang="scss">
