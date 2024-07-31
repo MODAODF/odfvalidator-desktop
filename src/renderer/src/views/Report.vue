@@ -5,23 +5,23 @@ import ResultTable from '../components/reports/ResultTable.vue'
 import '../styles/tableStyles.css'
 import FilelistTable from '../components/reports/FilelistTable.vue'
 
-let passed: Record<string, any[]> = {
+const passed: Record<string, any[]> = {
     '1.1': [],
     '1.2': [],
     '1.3': [],
 }
-let failed: Record<string, any[]> = {
+const failed: Record<string, any[]> = {
     '1.1': [],
     '1.2': [],
     '1.3': [],
     'undefined': []
 }
-let passedCount: Record<string, number> = {
+const passedCount: Record<string, number> = {
     '1.1': 0,
     '1.2': 0,
     '1.3': 0,
 }
-let failedCount: Record<string, number> = {
+const failedCount: Record<string, number> = {
     '1.1': 0,
     '1.2': 0,
     '1.3': 0,

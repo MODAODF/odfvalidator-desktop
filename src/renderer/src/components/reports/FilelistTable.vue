@@ -42,7 +42,7 @@ const props = defineProps({
 
 const version = ref('')
 const ispassed = ref(false)
-let isShowDetail = ref([] as boolean[])
+const isShowDetail = ref([] as boolean[])
 
 onMounted(async () => {
     version.value = Object.keys(props.filelistData as object)[0]
@@ -55,7 +55,7 @@ watch(() => props.filelistData, (newVal: object) => {
     isShowDetail.value = Array(Object.values(newVal)[0].length).fill(false)
 })
 
-let title = computed(() => {
+const title = computed(() => {
     if (version.value === 'undefined') return '無法檢測的檔案：'
     return ispassed.value ? `符合 ODF ${version.value} 標準的檔案：` : `不符合 ODF ${version.value} 標準的檔案列表：`
 })
