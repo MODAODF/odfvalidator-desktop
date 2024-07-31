@@ -2,26 +2,46 @@
     <div class="detail__contain">
         <div class="detail__item">
             <span>文字格子線</span>
-            <span>連續空白</span>
             <span>Enter 換頁</span>
+            <span>連續空白</span>
         </div>
         <div>
-            <span class="detail__passed">合格</span>
-            <span class="detail__passed">合格</span>
-            <span class="detail__failed">建議修改</span>
+            <span :class="layoutGridStyle">{{ layoutGridIsPassed }}</span>
+            <span :class="pageBreakStyle">{{ pageBreakHasIssue }}</span>
+            <span :class="spaceStyle">{{ spaceHasIssue }}</span>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import { defineProps, computed } from 'vue'
 
-const props = defineProps({
-    detailData: {
-        type: Object as () => Record<string, any>,
-        require: true
-    }
-})
+interface DetailData {
+    layoutGridHasIssue?: boolean
+    pageBreakHasIssue?: boolean
+    spaceHasIssue?: boolean
+}
 
+const props = defineProps<{
+    detailData: DetailData
+}>()
+
+const getStatusClass = (hasIssue: boolean | undefined) => {
+    return hasIssue ? 'detail__failed' : 'detail__passed'
+}
+
+const getStatusText = (hasIssue: boolean | undefined) => {
+    return hasIssue === undefined ? '未知' : hasIssue ? '建議修改' : '符合'
+}
+
+const layoutGridStyle = computed(() => getStatusClass(props.detailData?.layoutGridHasIssue))
+const layoutGridIsPassed = computed(() => getStatusText(props.detailData?.layoutGridHasIssue))
+
+const pageBreakStyle = computed(() => getStatusClass(props.detailData?.pageBreakHasIssue))
+const pageBreakHasIssue = computed(() => getStatusText(props.detailData?.pageBreakHasIssue))
+
+const spaceStyle = computed(() => getStatusClass(props.detailData?.spaceHasIssue))
+const spaceHasIssue = computed(() => getStatusText(props.detailData?.spaceHasIssue))
 </script>
 
 <style lang="scss">

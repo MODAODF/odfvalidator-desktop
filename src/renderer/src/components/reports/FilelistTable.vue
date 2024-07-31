@@ -18,8 +18,8 @@
                     <td class="w-25">
                         <div class="d-flex align-items-center justify-content-center">
                             <span class="fs-3">A</span>
-                            <button class="btn btn__dark ms-4" @click="showDetail(index)">
-                                查看
+                            <button v-if="ispassed" class="btn ms-4" :class="isShowDetail[index] ? 'btn__light' : 'btn__dark'" @click="showDetail(index)">
+                                {{ isShowDetail[index] ? '收起' : '查看' }}
                             </button>
                         </div>
                     </td>
@@ -52,6 +52,7 @@ onMounted(async () => {
 watch(() => props.filelistData, (newVal: object) => {
     version.value = Object.keys(newVal)[0]
     ispassed.value = newVal['ispassed']
+    isShowDetail.value = Array(Object.values(newVal)[0].length).fill(false)
 })
 
 let title = computed(() => {
