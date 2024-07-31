@@ -16,9 +16,9 @@
                         </DetailTable>
                     </td>
                     <td class="w-25">
-                        <div class="d-flex align-items-center justify-content-center">
-                            <span class="fs-3">A</span>
-                            <button v-if="ispassed" class="btn ms-4" :class="isShowDetail[index] ? 'btn__light' : 'btn__dark'" @click="showDetail(index)">
+                        <div class="d-flex align-items-center justify-content-center flex-column mx-2">
+                            <span class="fs-1">A</span>
+                            <button v-if="ispassed" class="btn" :class="isShowDetail[index] ? 'btn__light' : 'btn__dark'" @click="showDetail(index)">
                                 {{ isShowDetail[index] ? '收起' : '查看' }}
                             </button>
                         </div>
