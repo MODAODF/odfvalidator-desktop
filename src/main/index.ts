@@ -41,6 +41,8 @@ function createWindow(): void {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  // Initialize the odfvalidator path
+  Handlers.initializeOdfvalidatorPath()
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
@@ -53,11 +55,6 @@ app.whenReady().then(() => {
 
   // Register ipc handlers
   ipcMain.handle('check-java', Handlers.checkJavaHandler)
-  ipcMain.handle('specify-odfvalidator-path', Handlers.specifyOdfvalidatorPathHandler)
-  ipcMain.handle(
-    'check-windows-and-odfvalidator-path',
-    Handlers.checkPlatformAndOdfvalidatorPathHandler
-  )
   ipcMain.handle('detect-file', async (_, pathList) => {
     console.log('IPC sending data:', JSON.stringify(pathList, null, 2))
     return await Handlers.detectFileHandler(pathList)
