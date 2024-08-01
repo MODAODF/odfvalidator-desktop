@@ -4,7 +4,7 @@
             <thead>
                 <tr>
                     <th class="text-start ps-4">{{ title }}</th>
-                    <th>檢測結果</th>
+                    <th>排版建議</th>
                 </tr>
             </thead>
             <tbody>
@@ -17,10 +17,10 @@
                     </td>
                     <td class="w-25">
                         <div class="d-flex align-items-center justify-content-center flex-column mx-2">
-                            <span class="fs-1">A</span>
-                            <button v-if="ispassed" class="btn" :class="isShowDetail[index] ? 'btn__light' : 'btn__dark'" @click="showDetail(index)">
+                            <button v-if="hasLayoutSuggest(fileData)" class="btn" :class="isShowDetail[index] ? 'btn__light' : 'btn__dark'" @click="showDetail(index)">
                                 {{ isShowDetail[index] ? '收起' : '查看' }}
                             </button>
+                            <span v-else class="fs-2 no__suggest">-</span>
                         </div>
                     </td>
                 </tr>
@@ -63,7 +63,14 @@ const title = computed(() => {
 function showDetail(index: number) {
     isShowDetail.value[index] = !isShowDetail.value[index]
 }
+
+function hasLayoutSuggest(fileData: Record<string, any>) {
+    return fileData.layoutGridHasIssue || fileData.pageBreakHasIssue || fileData.spaceHasIssue
+}
 </script>
 
 <style lang="scss">
+.no__suggest {
+    color: rgb(124, 134, 141);
+}
 </style>

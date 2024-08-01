@@ -86,7 +86,7 @@ onMounted(async () => {
                     <td>N/A</td>
                 </tr>
                 <tr>
-                    <td>建議修改</td>
+                    <td>不符合</td>
                     <td v-for="(count, version) in props.failedCount" :key="version">
                         <div>
                             {{ count }}
