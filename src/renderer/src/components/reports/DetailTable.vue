@@ -10,6 +10,31 @@
             <span :class="pageBreakStyle">{{ pageBreakHasIssue }}</span>
             <span :class="spaceStyle">{{ spaceHasIssue }}</span>
         </div>
+        <div class="detail__suggest">
+            <span v-show="$props.detailData.layoutGridHasIssue">
+                <p>文字格子線：<br>
+                    於檔案頁面點擊右鍵，選擇「頁面樣式」->「文字網格」->「不使用網格」
+                </p>
+            </span>
+            <span v-show="$props.detailData.pageBreakHasIssue">
+                <p>Enter換頁：<br>
+                    請以「Ctrl + Enter」換頁方法取代 Enter換頁
+                </p>
+            </span>
+            <span v-show="$props.detailData.spaceHasIssue">
+                <p>連續空白：<br>
+                    當使用 MODAODF 文件應用工具時，請按以下步驟進行格式校正：
+                    <ol>
+                        <li>在功能表列中點擊「格式校正工具」</li>
+                        <li>移動游標至「單一格式校正」</li>
+                        <li>選擇「取代段落空白」</li>
+                    </ol>
+                    若使用其他 ODF文件應用工具，請
+                    <a href="https://github.com/MODAODF/FormatCheck/releases" target="_blank">點我</a>
+                    安裝最新版本的 FormatCheck.oxt
+                </p>
+            </span>
+        </div>
     </div>
 </template>
 
@@ -81,5 +106,14 @@ const spaceHasIssue = computed(() => getStatusText(props.detailData?.spaceHasIss
 
 .detail__failed {
     background-color: rgb(248, 234, 73);
+}
+
+.detail__suggest {
+    width: 100%;
+    flex-direction: column;
+    color: white;
+    font-size: 0.85rem;
+    margin-top: 20px;
+    margin-left: 10px;
 }
 </style>
