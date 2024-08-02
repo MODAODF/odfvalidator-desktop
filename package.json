@@ -34,6 +34,7 @@
     "electron-updater": "^6.1.7",
     "fs": "^0.0.1-security",
     "glob": "^10.3.10",
+    "html2pdf.js": "^0.10.2",
     "java-bridge": "^2.6.0",
     "os": "^0.1.2",
     "path": "^0.12.7",

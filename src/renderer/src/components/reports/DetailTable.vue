@@ -4,11 +4,13 @@
             <span>文字格子線</span>
             <span>Enter 換頁</span>
             <span>連續空白</span>
+            <!-- <span>canFix</span> -->
         </div>
         <div>
             <span :class="layoutGridStyle">{{ layoutGridIsPassed }}</span>
             <span :class="pageBreakStyle">{{ pageBreakHasIssue }}</span>
             <span :class="spaceStyle">{{ spaceHasIssue }}</span>
+            <!-- <span :class="canFixStyle">{{ canFixText }}</span> -->
         </div>
         <div class="detail__suggest">
             <span v-show="$props.detailData.layoutGridHasIssue">
@@ -45,6 +47,7 @@ interface DetailData {
     layoutGridHasIssue?: boolean
     pageBreakHasIssue?: boolean
     spaceHasIssue?: boolean
+    // canFix?: boolean
 }
 
 const props = defineProps<{
@@ -67,6 +70,9 @@ const pageBreakHasIssue = computed(() => getStatusText(props.detailData?.pageBre
 
 const spaceStyle = computed(() => getStatusClass(props.detailData?.spaceHasIssue))
 const spaceHasIssue = computed(() => getStatusText(props.detailData?.spaceHasIssue))
+
+// const canFixStyle = computed(() => getStatusClass(!props.detailData?.canFix))
+// const canFixText = computed(() => props.detailData?.canFix ? '是' : '否')
 </script>
 
 <style lang="scss">

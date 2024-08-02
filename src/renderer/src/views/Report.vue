@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import ResultTable from '../components/reports/ResultTable.vue'
 import '../styles/tableStyles.css'
 import FilelistTable from '../components/reports/FilelistTable.vue'
+import html2pdf from 'html2pdf.js'
 
 const passed: Record<string, any[]> = {
     '1.1': [],
@@ -132,6 +133,17 @@ onBeforeMount(async () => {
     })
 })
 
+function downloadPdf() {
+    const pageContent = document.getElementById('app')
+    const opt = {
+        margin: [10, 16, 10, 16],
+        filename: 'ODF 標準檢測報告',
+        html2canvas: { scale: 5},
+        jsPDF: {unit: 'mm', format: 'a4', orientation: 'portrait'}
+    }
+    html2pdf().from(pageContent).set(opt).save()
+}
+
 </script>
 
 <template>
@@ -144,7 +156,7 @@ onBeforeMount(async () => {
     </ResultTable>
     <div>
         <button class="btn btn__dark m-4" id="show-all-btn" @click="toggleShowAll">{{ showAllBtn ? '隱藏全部' : '查看全部' }}</button>
-        <button class="btn btn__light">匯出</button>
+        <button class="btn btn__light" @click="downloadPdf">匯出</button>
     </div>
     <FilelistTable v-for="(filelistData, index) in showFilelist" :key="index" class="d-flex flex-column align-items-center"
         :filelist-data="filelistData">

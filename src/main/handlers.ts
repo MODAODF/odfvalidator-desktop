@@ -70,7 +70,7 @@ export default class {
     for (const filePath of pathList) {
       console.log(`[DEBUG] 開始處理文件: ${filePath}`)
       console.log(`[DEBUG] jar path: ${odftoolkitPath}`)
-      const command = `java -jar ${odftoolkitPath} ${filePath} -v -e`
+      const command = `java -jar "${odftoolkitPath}" "${filePath}" -v -e`
       const fileName = filePath.split('/').pop()
       const rootDocVersionRegex: RegExp = /ODF version of root document: (\d+\.\d+)/
       const generatorRegex: RegExp =
