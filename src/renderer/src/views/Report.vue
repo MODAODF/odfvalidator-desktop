@@ -133,15 +133,39 @@ onBeforeMount(async () => {
     })
 })
 
-function downloadPdf() {
-    const pageContent = document.getElementById('app')
-    const opt = {
-        margin: [10, 16, 10, 16],
-        filename: 'ODF 標準檢測報告',
-        html2canvas: { scale: 5},
-        jsPDF: {unit: 'mm', format: 'a4', orientation: 'portrait'}
+function downloadPdf(): void {
+    toggleShowAll()
+    
+    // Add the print-pdf class
+    const pageContent = document.getElementById('app');
+    if (pageContent !== null) {
+        pageContent.classList.add('print-pdf')
     }
+
+    const filelistComponent = document.getElementById('filelistComponent')
+    if (filelistComponent !== null){
+        const filelistTable = filelistComponent.querySelector('table')
+        if (filelistTable !== null) {
+            filelistTable.classList.remove('w75')
+        }
+    }
+
+    const opt = {
+        margin: 0,
+        filename: 'ODF 標準檢測報告.pdf',
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
     html2pdf().from(pageContent).set(opt).save()
+    // .then(() => {
+    //     // Remove the print-pdf class after PDF generation
+    //     pageContent.classList.remove('print-pdf');
+    // }).catch((error: Error) => {
+    //     console.error('PDF generation failed:', error);
+    //     // Ensure the class is removed even if PDF generation fails
+    //     pageContent.classList.remove('print-pdf');
+    // });
 }
 
 </script>
@@ -158,11 +182,10 @@ function downloadPdf() {
         <button class="btn btn__dark m-4" id="show-all-btn" @click="toggleShowAll">{{ showAllBtn ? '隱藏全部' : '查看全部' }}</button>
         <button class="btn btn__light" @click="downloadPdf">匯出</button>
     </div>
-    <FilelistTable v-for="(filelistData, index) in showFilelist" :key="index" class="d-flex flex-column align-items-center"
+    <FilelistTable v-for="(filelistData, index) in showFilelist" :key="index" id="filelistComponent" class="d-flex flex-column align-items-center"
         :filelist-data="filelistData">
     </FilelistTable>
     <br>
     <button class="btn btn__dark my-3 mb-5" @click="goHome">檢測其他檔案</button>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="css" src="../styles/printpdf.css"></style>
