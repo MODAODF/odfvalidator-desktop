@@ -133,20 +133,19 @@ onBeforeMount(async () => {
     })
 })
 
-function downloadPdf(): void {
-    toggleShowAll()
-    
+function downloadPdf(): void {    
     // Add the print-pdf class
-    const pageContent = document.getElementById('app');
+    const pageContent = document.getElementById('app')
     if (pageContent !== null) {
         pageContent.classList.add('print-pdf')
     }
 
+    let filelistTable: HTMLTableElement | null = null
     const filelistComponent = document.getElementById('filelistComponent')
     if (filelistComponent !== null){
-        const filelistTable = filelistComponent.querySelector('table')
+        filelistTable = filelistComponent.querySelector('table')
         if (filelistTable !== null) {
-            filelistTable.classList.remove('w75')
+            filelistTable.classList.remove('w-75')
         }
     }
 
@@ -157,15 +156,21 @@ function downloadPdf(): void {
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
-    html2pdf().from(pageContent).set(opt).save()
-    // .then(() => {
-    //     // Remove the print-pdf class after PDF generation
-    //     pageContent.classList.remove('print-pdf');
-    // }).catch((error: Error) => {
-    //     console.error('PDF generation failed:', error);
-    //     // Ensure the class is removed even if PDF generation fails
-    //     pageContent.classList.remove('print-pdf');
-    // });
+    if (pageContent !== null){
+        html2pdf().from(pageContent).set(opt).save().then(() => {
+            // Remove the print-pdf class after PDF generation
+            pageContent.classList.remove('print-pdf')
+            if (filelistTable !== null) {
+                filelistTable.classList.add('w-75')
+            }
+        }).catch((error: Error) => {
+            console.error('PDF generation failed:', error);
+            pageContent.classList.remove('print-pdf');
+            if (filelistTable !== null) {
+                filelistTable.classList.add('w-75')
+            }
+        });
+    }
 }
 
 </script>
