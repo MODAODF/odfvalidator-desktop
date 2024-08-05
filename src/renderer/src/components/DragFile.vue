@@ -3,6 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { ref, Ref, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+
+const { locale } = useI18n()
+const handleChangeLanguage = (e) => {
+  locale.value = e.target.value
+}
 
 const dragFileList: Ref<File[]> = ref([])
 const uploaded = ref<boolean>(false)
@@ -71,6 +77,13 @@ async function scrollToDetectBtn() {
 
 <template>
   <div class="file__catcher__container">
+    <div>
+      切換語言：
+      <select @change="handleChangeLanguage">
+        <option value="zh-TW">中文</option>
+        <option value="en-US">English</option>
+      </select>
+    </div>
     <div
       class="file__catcher"
       @click="selectFiles"
@@ -79,18 +92,20 @@ async function scrollToDetectBtn() {
       @dragover.prevent.self="dragOver"
     >
       <FontAwesomeIcon class="m-5" :icon="faArrowUpFromBracket" size="6x"></FontAwesomeIcon>
-      <h3>點擊選擇檔或拖曳置區域</h3>
+      <h3>{{ $t('dragFile.selectOrDrop') }}</h3>
     </div>
     <div v-if="uploaded" class="m-5">
       <div class="upload__filelist text-start">
-        <p class="fs-5">已選取的檔案：</p>
+        <p class="fs-5"> $t('dragFile.selectedFiles')：</p>
         <ol>
           <li v-for="(dragFile, key) in dragFileList" :key="key">
             {{ dragFile['name'] }}
           </li>
         </ol>
       </div>
-      <button @click="detectFile" class="btn btn__light mt-3" ref="detectBtn">開始檢測</button>
+      <button @click="detectFile" class="btn btn__light mt-3" ref="detectBtn">
+        {{ $t('dragFile.startDetection') }}
+      </button>
     </div>
   </div>
 </template>
