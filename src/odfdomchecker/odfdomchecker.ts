@@ -2,14 +2,20 @@ import { OdfdomCheckResult } from './type'
 import { runLayoutGridChecker } from './layoutGridChecker'
 import { runPageBreakChecker } from './pageBreakChecker'
 import { runSpaceChecker } from './spaceChecker'
-import { appendClasspath } from 'java-bridge'
+import { appendClasspath, ensureJvm } from 'java-bridge'
 import path from 'path'
+import { app } from 'electron'
 
 export async function runOdfdomCheck(filePath: string): Promise<OdfdomCheckResult> {
-  const jarPath: string = path.join(
-    __dirname,
-    '../../public/libs/odfdom-java-0.12.0-jar-with-dependencies.jar'
-  )
+  // 設置 JVM
+  ensureJvm({
+    isPackagedElectron: app.isPackaged
+  });
+
+  const jarPath: string = app.isPackaged
+    ? path.join(process.resourcesPath, 'app.asar.unpacked', 'public', 'libs', 'odfdom-java-0.12.0-jar-with-dependencies.jar')
+    : path.join(__dirname, '../../public/libs/odfdom-java-0.12.0-jar-with-dependencies.jar')
+
   console.log(`[DEBUG] ODFDOM jar 庫路徑：${jarPath}`)
   appendClasspath(jarPath)
 
