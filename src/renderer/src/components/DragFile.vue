@@ -78,7 +78,7 @@ async function scrollToDetectBtn() {
 <template>
   <div class="file__catcher__container">
     <div>
-      切換語言：
+      語言 / Languages：
       <select @change="handleChangeLanguage">
         <option value="zh-TW">中文</option>
         <option value="en-US">English</option>
@@ -96,7 +96,7 @@ async function scrollToDetectBtn() {
     </div>
     <div v-if="uploaded" class="m-5">
       <div class="upload__filelist text-start">
-        <p class="fs-5"> $t('dragFile.selectedFiles')：</p>
+        <p class="fs-5"> {{$t('dragFile.selectedFiles')}}：</p>
         <ol>
           <li v-for="(dragFile, key) in dragFileList" :key="key">
             {{ dragFile['name'] }}
