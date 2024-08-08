@@ -1,6 +1,5 @@
 import { exec } from 'child_process'
 import { app } from 'electron'
-import { glob } from 'glob'
 import path from 'path'
 import util from 'util'
 import Store from 'electron-store'
@@ -50,21 +49,10 @@ export default class {
   }
 
   public static async detectFileHandler(pathList: string[]): Promise<object[] | null> {
-    const platform: string = process.platform
-
-    let odftoolkitPath: string | undefined = getOdfvalidatorPath()
-    console.log('Odfvalidator path:', odftoolkitPath)
-    if (!odftoolkitPath) {
-      console.error('Unable to locate odfvalidator jar file')
-      return null
-    }
-
-    if (platform === 'win32') {
-      const odftoolkit: string[] = await glob(odftoolkitPath as string, {
-        windowsPathsNoEscape: true
-      })
-      odftoolkitPath = odftoolkit[0]
-    }
+    const odftoolkitPath: string = app.isPackaged
+      ? path.join(process.resourcesPath, 'app.asar.unpacked', 'public', 'libs', 'odfvalidator-0.12.0-jar-with-dependencies.jar')
+      : path.join(__dirname, '../../public/libs/odfvalidator-0.12.0-jar-with-dependencies.jar'
+    )
     const result: object[] = []
 
     for (const filePath of pathList) {

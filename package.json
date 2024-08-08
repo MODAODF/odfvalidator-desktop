@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "An Electron application with Vue and TypeScript",
   "main": "./out/main/index.js",
-  "author": "example.com",
+  "author": {
+    "name": " OSSII",
+    "email": "tony.yang@ossii.com.tw"
+  },
   "homepage": "https://electron-vite.org",
   "scripts": {
     "format": "prettier --write .",
@@ -70,7 +73,29 @@
     "asarUnpack": [
       "node_modules/java-bridge/**",
       "node_modules/java-bridge-*/**",
-      "public/libs/odfdom-java-0.12.0-jar-with-dependencies.jar"
-    ]
+      "public/libs/odfdom-java-0.12.0-jar-with-dependencies.jar",
+      "public/libs/odfvalidator-0.12.0-jar-with-dependencies.jar"
+    ],
+    "extraResources": [
+      {
+        "from": "public/icons/",
+        "to": "icons",
+        "filter": ["**/*"]
+      }
+    ],
+    "linux": {
+      "target": [
+        "deb"
+      ],
+      "category": "Utility",
+      "icon": "public/icons/256x256.png",
+      "executableName": "odfvalidator-desktop",
+      "desktop": {
+        "Name": "odfvalidator-desktop",
+        "Icon": "/opt/odfvalidator-desktop/resources/icons/256x256.png",
+        "Type": "Application",
+        "Categories": "Utility;"
+      }
+    }
   }
 }

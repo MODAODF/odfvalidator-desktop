@@ -3,6 +3,7 @@ import Handlers from './handlers'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import path from 'path'
 
 function createWindow(): void {
   // Create the browser window.
@@ -10,7 +11,10 @@ function createWindow(): void {
     width: 1000,
     height: 670,
     show: false,
-    icon: join(__dirname, '../../public/icons/icon.ico'),
+    icon: app.isPackaged
+      ? path.join(process.resourcesPath, 'icons', '256x256.png')
+      : path.join(__dirname, '../../public/icons/256x256.png'
+    ),
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
