@@ -123,9 +123,9 @@ onBeforeMount(async () => {
             fileName,
             generator,
             ...(info[4]?.canFix && { canFix: info[4].canFix }),
-            layoutGridHasIssue: info[4].layoutGridHasIssue,
-            pageBreakHasIssue: info[5].pageBreakHasIssue,
-            spaceHasIssue: info[6].spaceHasIssue
+            layoutGridHasIssue: info[5].layoutGridHasIssue,
+            pageBreakHasIssue: info[6].pageBreakHasIssue,
+            spaceHasIssue: info[7].spaceHasIssue
 
         }
         info[0].standard ? passed[rootDocVersion].push(fileData) : failed[rootDocVersion].push(fileData)
