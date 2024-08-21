@@ -7,8 +7,12 @@ const environment = useEnvironmentStore()
 
 const javaInstalled: Ref<string | null> = ref(null)
 const javaDescription: Ref<string> = ref('')
+const isWindows: Ref<boolean> = ref(false)
 
 onMounted(async () => {
+  // 檢查操作系統是否為 Windows
+  isWindows.value = navigator.userAgentData.platform.startsWith('Win')
+
   const response: string | null = await window.api.checkJava()
   console.log(response)
   javaInstalled.value = response
@@ -32,8 +36,12 @@ watch(javaInstalled, () => {
 
 <template>
   <div v-if="!javaInstalled">
-    <h1>Java 執行環境尚未安裝，或版本已過時</h1>
-    <p>{{ javaDescription }}</p>
+    <h3>Java 執行環境尚未安裝，或版本已過時</h3>
+    <div v-if="isWindows">
+      <a href="https://learn.microsoft.com/zh-tw/java/openjdk/download" target="_blank">
+        點擊這裡下載執行 Java 環境的 OpenJDK 11，或更新版本
+      </a>
+    </div>
   </div>
 
   <div v-else>
