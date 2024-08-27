@@ -134,8 +134,15 @@ export default class {
       console.log(`[DEBUG] ODFDOM 檢查結果:`, odfvalidatorResult)
 
       console.log(`[DEBUG] 開始執行 ODF format 檢查`)
-      const odfformatResult = await this.handleOdfformatChecker(filePath)
-      console.log(`[DEBUG] ODF format 檢查結果:`, odfformatResult)
+      let odfformatResult = {
+        hasLayoutGridIssues: false,
+        hasPageBreakIssues: false,
+        hasSpacingIssues: false
+      }
+      if (odfvalidatorResult.standard) {
+        odfformatResult = await this.handleOdfformatChecker(filePath)
+        console.log(`[DEBUG] ODF format 檢查結果:`, odfformatResult)
+      }
 
       const entry = {
         [filePath]: [
