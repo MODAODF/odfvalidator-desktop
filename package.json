@@ -86,6 +86,9 @@
       "target": [
         "deb"
       ],
+      "deb": {
+        "depends": ["libnotify4", "libxtst6", "libnss3", "default-jre (>= 2:1.11)"]
+      },
       "category": "Utility",
       "icon": "public/icons/256x256.png",
       "executableName": "odfvalidator-desktop",
