@@ -6,3 +6,12 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>
   export default component
 }
+
+import type { Table, UserOptions } from 'jspdf-autotable'
+
+declare module 'jspdf' {
+  interface jsPDF {
+    lastAutoTable: Table
+    autoTable: (options: UserOptions) => void
+  }
+}
