@@ -4,7 +4,10 @@ import { useRoute, useRouter } from 'vue-router'
 import ResultTable from '../components/reports/ResultTable.vue'
 import '../styles/tableStyles.css'
 import FilelistTable from '../components/reports/FilelistTable.vue'
-import html2pdf from 'html2pdf.js'
+import jsPDF from 'jspdf'
+import 'jspdf-autotable'
+import NotoSansTC from '../fonts/NotoSansTC-Regular.ttf'
+import pdfLogo from '../../../../public/icons/pdf_logo.jpg'
 
 const passed: Record<string, any[]> = {
     '1.1': [],
@@ -133,44 +136,194 @@ onBeforeMount(async () => {
     })
 })
 
-function downloadPdf(): void {    
-    // Add the print-pdf class
-    const pageContent = document.getElementById('app')
-    if (pageContent !== null) {
-        pageContent.classList.add('print-pdf')
-    }
+/**
+ * 使用 jsPDF 生成表格、儲存檔案
+ */
+async function downloadPdf(): Promise<void> {
 
-    let filelistTable: HTMLTableElement | null = null
-    const filelistComponent = document.getElementById('filelistComponent')
-    if (filelistComponent !== null){
-        filelistTable = filelistComponent.querySelector('table')
-        if (filelistTable !== null) {
-            filelistTable.classList.remove('w-75')
+    const doc = new jsPDF()
+    const base64Image = await imageToBase64(pdfLogo);
+    const baseStyle = {
+        font: 'NotoSansTC',
+        fontStyle: 'normal' as 'normal',
+        textColor: 0,
+        fillColor: 255, // 這只設定到第一列
+    }
+    const pageHeader = {
+        // 頁首設定，設定這以符合每一頁重複頁首
+        margin: { top: 35 },
+        showHeader: 'everyPage',
+        willDrawPage: () => {
+            doc.addImage(base64Image, 'JPEG', 14, 10, 850/12, 228/12);
+        },
+    }
+    doc.addFont(NotoSansTC, 'NotoSansTC', 'normal')
+    doc.setFont('NotoSansTC')
+    doc.setFontSize(12)
+
+    // 第一部分：標題
+    doc.autoTable({
+        ...pageHeader,
+        body: [
+            [
+                {
+                    content: '檢測報告',
+                    styles: { halign: 'center' },
+                },
+            ],
+            [
+                {
+                    content: 'Analysis Report',
+                    styles: { halign: 'center' },
+                },
+            ],
+        ],
+        tableLineColor: 0,
+        tableLineWidth: 0.2,
+        styles: {
+            ...baseStyle,
+        },
+        didParseCell: commonDidParseCell,
+    })
+
+    // 第二部份：檢測資訊
+    const totalPassed = Object.values(passedCount).reduce((sum, value) => sum + value, 0);
+    const totalFailed = Object.values(failedCount).reduce((sum, value) => sum + value, 0);
+    const totalSuggestions = calculateTotalSuggestions(passed);
+
+    doc.autoTable({
+        startY: (doc as any).lastAutoTable.finalY,
+        body: [
+            ['驗證軟體', 'ODF格式檢測工具 1.0.0'],
+            ['檢測日期', getCurrentDate()],
+            ['檢測檔案總數', totalPassed + totalFailed],
+            ['符合比例', `${Math.floor(totalPassed / (totalPassed + totalFailed) * 100)}%`],
+            ['符合總數', totalPassed],
+            ['建議修改總數', totalSuggestions],
+            ['不符合總數', totalFailed],
+            ['未知檔案數', failedCount['undefined']],
+        ],
+        styles: {
+            ...baseStyle,
+            lineColor: 0,
+            lineWidth: 0.2,
+        },
+        didParseCell: commonDidParseCell,
+    });
+
+    // 第三部分：檢測結果表格，從 detectResult 取得資料，檢測標準符合的表格
+    const headers = ['驗證項目', '檔案名稱', '符合ODF標準', '製作工具', '連續空白', 'Enter換頁', '文字格子線'];
+    const verticalHorizontalCenter = { valign: 'middle', halign: 'center' };
+    let conformingIndex = 1;
+    let nonConformingIndex = 1;
+    const conformingBody: Array<(string | object)[]> = [];
+    const nonConformingBody: Array<(string | object)[]> = [];
+
+    detectResult.forEach((item: any) => {
+        const filePath = Object.keys(item)[0];
+        const results = item[filePath];
+
+        const row = [
+            createStyleCell(String(results[0]?.standard ? conformingIndex++ : nonConformingIndex++), verticalHorizontalCenter), // 驗證項目
+            filePath, // 檔案名稱
+            createStyleCell(results[2]?.rootDocVersion || '', verticalHorizontalCenter), // 符合ODF標準
+            createStyleCell(results[3]?.generator || '', verticalHorizontalCenter), // 製作工具
+            createStyleCell(results[7]?.spaceHasIssue ? '建議修改' : '符合', verticalHorizontalCenter), // 連續空白
+            createStyleCell(results[6]?.pageBreakHasIssue ? '建議修改' : '符合', verticalHorizontalCenter), // Enter換頁
+            createStyleCell(results[5]?.layoutGridHasIssue ? '建議修改' : '符合', verticalHorizontalCenter), // 文字格子線
+        ];
+
+        if (results[0]?.standard) {
+            conformingBody.push(row); // 符合標準的項目
+        } else {
+            nonConformingBody.push(row); // 不符合標準的項目
         }
-    }
+    });
 
-    const opt = {
-        margin: 0,
-        filename: 'ODF 標準檢測報告.pdf',
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
-    if (pageContent !== null){
-        html2pdf().from(pageContent).set(opt).save().then(() => {
-            // Remove the print-pdf class after PDF generation
-            pageContent.classList.remove('print-pdf')
-            if (filelistTable !== null) {
-                filelistTable.classList.add('w-75')
-            }
-        }).catch((error: Error) => {
-            console.error('PDF generation failed:', error);
-            pageContent.classList.remove('print-pdf');
-            if (filelistTable !== null) {
-                filelistTable.classList.add('w-75')
-            }
+    if (conformingBody.length !== 0) {
+        doc.text('檢測結果：', 14, (doc as any).lastAutoTable.finalY + 10)
+        doc.autoTable({
+            startY: (doc as any).lastAutoTable.finalY + 18,
+            head: [['符合ODF標準檢測：']],
+            styles: {
+                ...baseStyle,
+                lineColor: 0,
+                lineWidth: 0.2,
+            },
+        })
+        doc.autoTable({ 
+            startY: (doc as any).lastAutoTable.finalY,
+            head: createRowAndStyles(headers, verticalHorizontalCenter),
+            body: conformingBody,
+            styles: {
+                ...baseStyle,
+                lineColor: 0,
+                lineWidth: 0.2,
+            },
+            columnStyles: {
+                0: {cellWidth: 11},
+                1: {cellWidth: 73},
+                2: {cellWidth: 18},
+                4: {cellWidth: 13},
+                5: {cellWidth: 13},
+                6: {cellWidth: 13},
+            },
+            rowPageBreak: 'avoid',
+            ...pageHeader,
+            didParseCell: commonDidParseCell,
         });
     }
+
+    // 第四部分：檢測結果表格，檢測標準不符合的表格
+    const nonConformingHeaders = ['驗證項目', '檔案名稱', '不符合ODF標準', '製作工具'];
+    if (nonConformingBody.length !== 0) {
+        doc.autoTable({
+            startY: (doc as any).lastAutoTable.finalY + 10,
+            head: [['不符合ODF標準檢測：']],
+            styles: {
+                ...baseStyle,
+                lineColor: 0,
+                lineWidth: 0.2,
+            },
+        })
+        doc.autoTable({ 
+            startY: (doc as any).lastAutoTable.finalY,
+            head: createRowAndStyles(nonConformingHeaders, verticalHorizontalCenter),
+            body: nonConformingBody,
+            styles: {
+                ...baseStyle,
+                lineColor: 0,
+                lineWidth: 0.2,
+            },
+            columnStyles: {
+                0: {cellWidth: 11},
+                1: {cellWidth: 73},
+                2: {cellWidth: 49},
+                3: {cellWidth: 49},
+            },
+            rowPageBreak: 'avoid',
+            ...pageHeader,
+            didParseCell: commonDidParseCell,
+        });
+    }
+
+    // 第五部分：備註
+    doc.autoTable({ 
+        startY: (doc as any).lastAutoTable.finalY + 12,
+        body: [
+            ['免責聲明：'],
+            ['本工具僅供檢測文件是否符合 ODF（Open Document Format）標準，其檢測結果僅供參考，不保證絕對的準確性或適用性，使用者應自行判斷是否根據本工具的建議進行調整，對於受測之ODF文件，也不會進行任何修改或調整，僅提供與文件格式相關的建議資訊。'],
+        ],
+        styles: {
+            ...baseStyle,
+            lineWidth: 0,
+        },
+        pageBreak: 'avoid',
+        ...pageHeader,
+        didParseCell: commonDidParseCell,
+    });
+
+    doc.save('ODF 標準檢測報告.pdf')
 }
 
 </script>
