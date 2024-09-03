@@ -326,6 +326,101 @@ async function downloadPdf(): Promise<void> {
     doc.save('ODF 標準檢測報告.pdf')
 }
 
+/**
+ * 計算檢測結果總共有幾個建議修改
+ * @param passed 檢測結果通過的檔案
+ */
+function calculateTotalSuggestions(passed: Record<string, any[]>): number {
+    let totalSuggestions = 0;
+
+    Object.keys(passed).forEach(version => {
+        passed[version].forEach(file => {
+            if (file.layoutGridHasIssue) {totalSuggestions++;}
+            if (file.pageBreakHasIssue) {totalSuggestions++;}
+            if (file.spaceHasIssue) {totalSuggestions++;}
+        });
+    });
+
+    return totalSuggestions;
+}
+
+/**
+ * 將圖片轉換成 base64
+ * @param imagePath 圖片路徑
+ */
+function imageToBase64(imagePath): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'Anonymous';
+        img.src = imagePath;
+
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+                ctx.drawImage(img, 0, 0);
+            } else {
+                console.error('Failed to get 2D context');
+            }
+
+            const dataURL = canvas.toDataURL('image/png');
+            resolve(dataURL.replace(/^data:image\/(png|jpg);base64,/, ''));
+        };
+
+        img.onerror = (err) => {
+            reject(err);
+        };
+    });
+}
+
+/**
+ * 取得目前日期 YYYY/MM/DD
+ */
+function getCurrentDate(): string {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}/${month}/${day}`;
+}
+
+/**
+ * 產生一列，並且設定樣式
+ * @param row
+ * @param styles 
+ */
+function createRowAndStyles(row: string[], styles: object): any[] {
+    return [row.map(content => ({
+        content: content,
+        styles: styles,
+    }))];
+}
+
+/**
+ * 產生一個 cell，並且設定的樣式
+ * @param content 
+ * @param styles 
+ */
+function createStyleCell(content: string, styles: object): object {
+    return {
+        content: content,
+        styles: styles,
+    };
+}
+
+/**
+ * 設定所有 body 部分的樣式
+ */
+function commonDidParseCell(data: any): void {
+    // 設定表格樣式，所有 body 都使用同樣的樣式
+    if (data.section === 'body') {
+        data.cell.styles.fillColor = 'white';
+    }
+}
 </script>
 
 <template>
