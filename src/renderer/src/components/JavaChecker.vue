@@ -11,7 +11,7 @@ const isWindows: Ref<boolean> = ref(false)
 
 onMounted(async () => {
   // 檢查作業系統是否為 Windows
-  isWindows.value = (navigator as any).userAgentData.platform.startsWith('Win')
+  isWindows.value = navigator.userAgent.indexOf('Windows') !== -1
 
   const response: string | null = await window.api.checkJava()
   console.log(response)
