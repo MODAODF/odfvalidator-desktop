@@ -73,7 +73,7 @@
     "asarUnpack": [
       "node_modules/java-bridge/**",
       "node_modules/java-bridge-*/**",
-      "public/libs/odfdom-java-0.12.0-jar-with-dependencies.jar",
+      "public/libs/odfformat_checker-jar-with-dependencies.jar",
       "public/libs/odfvalidator-0.12.0-jar-with-dependencies.jar"
     ],
     "extraResources": [
@@ -83,13 +83,13 @@
         "filter": ["**/*"]
       }
     ],
+    "deb": {
+      "depends": ["libnotify4", "libxtst6", "libnss3", "default-jre (>= 2:1.11)"]
+    },
     "linux": {
       "target": [
         "deb"
       ],
-      "deb": {
-        "depends": ["libnotify4", "libxtst6", "libnss3", "default-jre (>= 2:1.11)"]
-      },
       "category": "Utility",
       "icon": "public/icons/256x256.png",
       "executableName": "odfvalidator-desktop",
