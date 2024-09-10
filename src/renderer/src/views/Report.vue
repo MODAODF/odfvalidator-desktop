@@ -121,7 +121,7 @@ onBeforeMount(async () => {
         const fileName = Object.keys(detectInfo)[0].split('/').pop()
         const info = Object.values(detectInfo)[0]
         const { generator } = info[3]
-        const { rootDocVersion } = info[2]
+        const rootDocVersion = (parseFloat(info[2]['rootDocVersion']) > 1.3) ? 'undefined' : info[2]['rootDocVersion']
         const fileData = {
             fileName,
             generator,
