@@ -80,23 +80,27 @@ export default class {
     const fileName: string = filePath.split('/').pop() || ''
     const rootDocVersionRegex: RegExp = /ODF version of root document: (\d+\.\d+)/
     const generatorRegex: RegExp = /Info: Generator: ((?:OxOffice\/\w+(\.\d+)*)|(\S+\/\d+(\.\d+)*))/
+    const mimetypeRegex: RegExp = /Info: Media Type: (\S+)/
 
     try {
       const { stdout } = await execPromise(command)
       const rootDocVersionMatch: RegExpMatchArray | null = stdout.match(rootDocVersionRegex)
       const generatorMatch: RegExpMatchArray | null = stdout.match(generatorRegex)
+      const mimetypeMatch: RegExpMatchArray | null = stdout.match(mimetypeRegex)
 
       return {
         standard: true,
         msg: `${fileName} 檔案符合標準的 ODF 格式`,
         rootDocVersion: rootDocVersionMatch ? rootDocVersionMatch[1] : undefined,
         generator: generatorMatch ? generatorMatch[1] : undefined,
-        canFix: null
+        canFix: null,
+        mimetype: mimetypeMatch ? mimetypeMatch[1] : undefined
       }
     } catch (error: Error | any) {
       console.error(`[ERROR] 檢測文件時發生錯誤:`, error)
       const errMsg = error.stdout
       const rootDocVersionMatch: RegExpMatchArray | null = errMsg.match(rootDocVersionRegex)
+      const mimetypeMatch: RegExpMatchArray | null = errMsg.match(mimetypeRegex)
 
       if (rootDocVersionMatch !== null) {
         const generatorMatch: RegExpMatchArray | null = errMsg.match(generatorRegex)
@@ -105,7 +109,8 @@ export default class {
           msg: `${fileName} 檔案不符合標準的 ODF 格式`,
           rootDocVersion: rootDocVersionMatch ? rootDocVersionMatch[1] : undefined,
           generator: generatorMatch ? generatorMatch[1] : undefined,
-          canFix: canFixBySaveAs(errMsg, fileName)
+          canFix: canFixBySaveAs(errMsg, fileName),
+          mimetype: mimetypeMatch ? mimetypeMatch[1] : undefined
         }
       } else {
         return {
@@ -113,7 +118,8 @@ export default class {
           msg: `${fileName} 檔案非 ODF 文件格式`,
           rootDocVersion: undefined,
           generator: undefined,
-          canFix: null
+          canFix: null,
+          mimetype: mimetypeMatch ? mimetypeMatch[1] : undefined
         }
       }
     }
@@ -169,7 +175,7 @@ export default class {
         hasPageBreakIssues: false,
         hasSpacingIssues: false
       }
-      if (odfvalidatorResult.standard) {
+      if (odfvalidatorResult.standard && odfvalidatorResult.mimetype === 'application/vnd.oasis.opendocument.text') {
         odfformatResult = await this.handleOdfformatChecker(filePath)
         console.log(`[DEBUG] ODF format 檢查結果:`, odfformatResult)
       }
@@ -181,6 +187,7 @@ export default class {
           { rootDocVersion: odfvalidatorResult.rootDocVersion },
           { generator: odfvalidatorResult.generator },
           { canFix: odfvalidatorResult.canFix },
+          { mimetype: odfvalidatorResult.mimetype },
           { layoutGridHasIssue: odfformatResult.hasLayoutGridIssues },
           { pageBreakHasIssue: odfformatResult.hasPageBreakIssues },
           { spaceHasIssue: odfformatResult.hasSpacingIssues }
