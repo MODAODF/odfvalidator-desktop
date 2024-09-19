@@ -26,6 +26,34 @@ function getOdfformatCheckerPath(): string {
     : path.join(app.getAppPath(), 'public', 'libs', 'odfformat_checker-jar-with-dependencies.jar')
 }
 
+function canFixBySaveAs(errMsg: string, fileName: string): boolean {
+  const escapedFileName = escapeRegExp(fileName);
+
+  // 定義錯誤訊息的正則表達式，若有錯誤會以【整數 + errors】的形式呈現，無錯誤則會以【no errors】的形式呈現
+  const manifestXmlErrorPattern: RegExp = new RegExp(`${escapedFileName}/META-INF/manifest.xml:\\s\\s+Info:\\s+(\\d+)\\s+errors`)
+  const mimetypeErrorPattern: RegExp = new RegExp(`${escapedFileName}/mimetype:\\s\\s+Info:\\s+(\\d+)\\s+errors`);
+  const summaryPattern: RegExp = new RegExp(`${escapedFileName}:\\s\\s+Info:\\s+(\\d+)\\s+errors`);
+
+  // 檢查錯誤訊息是否符合預期的格式
+  const manifestError: RegExpMatchArray | null  = errMsg.match(manifestXmlErrorPattern);
+  const mimetypeMatch: RegExpMatchArray | null  = errMsg.match(mimetypeErrorPattern);
+  const summary: RegExpMatchArray | null  = errMsg.match(summaryPattern);
+
+  // 紀錄指定錯誤的數量
+  const manifestErrorCount: number = manifestError ? parseInt(manifestError[1]) : 0
+  const mimetypeMatchCount: number = mimetypeMatch ? parseInt(mimetypeMatch[1]) : 0
+  const summaryCount: number = summary ? parseInt(summary[1]) : 0
+
+  if (summaryCount !== 0 && manifestErrorCount + mimetypeMatchCount === summaryCount) {
+    return true
+  }
+  return false
+}
+// 將字串轉換成正則表達式
+function escapeRegExp(string: string): string {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 export default class {
   public static initializeOdfvalidatorPath() {
     store.delete('odfvalidatorPath') // 原本electron store裡的'odfvalidatorPath'值，即使原始碼更改了，再次執行electron也不會變更，因此初始化時將原有的值清空
@@ -49,7 +77,7 @@ export default class {
 
   private static async handleOdfvalidator(filePath: string, odftoolkitPath: string): Promise<any> {
     const command = `java -jar "${odftoolkitPath}" "${filePath}" -v -e`
-    const fileName = filePath.split('/').pop()
+    const fileName: string = filePath.split('/').pop() || ''
     const rootDocVersionRegex: RegExp = /ODF version of root document: (\d+\.\d+)/
     const generatorRegex: RegExp = /Info: Generator: ((?:OxOffice\/\w+(\.\d+)*)|(\S+\/\d+(\.\d+)*))/
 
@@ -62,7 +90,8 @@ export default class {
         standard: true,
         msg: `${fileName} 檔案符合標準的 ODF 格式`,
         rootDocVersion: rootDocVersionMatch ? rootDocVersionMatch[1] : undefined,
-        generator: generatorMatch ? generatorMatch[1] : undefined
+        generator: generatorMatch ? generatorMatch[1] : undefined,
+        canFix: null
       }
     } catch (error: Error | any) {
       console.error(`[ERROR] 檢測文件時發生錯誤:`, error)
@@ -76,14 +105,15 @@ export default class {
           msg: `${fileName} 檔案不符合標準的 ODF 格式`,
           rootDocVersion: rootDocVersionMatch ? rootDocVersionMatch[1] : undefined,
           generator: generatorMatch ? generatorMatch[1] : undefined,
-          canFix: false
+          canFix: canFixBySaveAs(errMsg, fileName)
         }
       } else {
         return {
           standard: false,
           msg: `${fileName} 檔案非 ODF 文件格式`,
           rootDocVersion: undefined,
-          generator: undefined
+          generator: undefined,
+          canFix: null
         }
       }
     }

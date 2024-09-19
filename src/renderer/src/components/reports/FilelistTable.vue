@@ -11,6 +11,12 @@
                 <tr v-for="(fileData, index) in props.filelistData?.[version]" :key="index">
                     <td class="text-start px-4">
                         <p>檔案名稱：{{ fileData.fileName || '未知' }}</p>
+                        <span class="last__tool text-muted small">最後儲存的文件應用工具: {{ fileData.generator }}</span>
+                        <span v-if="!ispassed" class="d-block mb-3 small">
+                            <span v-if="fileData.canFix">請將檔案【另存新檔】後重新檢測，即可通過</span>
+                            <span v-else>請嘗試【另存新檔】以修正錯誤，若仍不符合，請參考</span>
+                            <a href="https://odf.moda.gov.tw/QA/public/" target="_blank" class="text-dark">ODF文件應用工具問與答</a>
+                        </span>
                         <DetailTable v-if="isShowDetail[index]"
                             :detail-data="fileData">
                         </DetailTable>
@@ -72,5 +78,10 @@ function hasLayoutSuggest(fileData: Record<string, any>) {
 <style lang="scss">
 .no__suggest {
     color: rgb(124, 134, 141);
+}
+.last__tool {
+    display: block;
+    margin-top: -10px;
+    margin-bottom: 15px;
 }
 </style>
