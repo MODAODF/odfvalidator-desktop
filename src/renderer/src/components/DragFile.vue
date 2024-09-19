@@ -14,6 +14,7 @@ const dragFileList: Ref<File[]> = ref([])
 const uploaded = ref<boolean>(false)
 const router = useRouter()
 const detectBtn = ref<HTMLElement | null>(null)
+const isDetecting = ref<boolean>(false) // 新增狀態變量
 
 function selectFiles() {
   const fileInput: HTMLInputElement = document.createElement('input')
@@ -55,6 +56,8 @@ function dragLeave(e: DragEvent) {
 }
 
 async function detectFile(e: MouseEvent) {
+  isDetecting.value = true
+  scrollToDetectBtn()
   ;(e.target as HTMLButtonElement).disabled = true
   const pathList: string[] = []
   for (const file of dragFileList.value) {
@@ -66,6 +69,8 @@ async function detectFile(e: MouseEvent) {
     window.scrollTo(0, 0)
   } catch (error) {
     console.error('An error occurred while detecting file:', error)
+  } finally {
+    isDetecting.value = false
   }
 }
 
@@ -102,6 +107,12 @@ async function scrollToDetectBtn() {
             {{ dragFile['name'] }}
           </li>
         </ol>
+      </div>
+      <div v-if="isDetecting" class="d-flex align-items-center ms-3 mt-4">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <span class="ms-2">{{$t('dragFile.detecting')}}</span>
       </div>
       <button @click="detectFile" class="btn btn__light mt-3" ref="detectBtn">
         {{ $t('dragFile.startDetection') }}

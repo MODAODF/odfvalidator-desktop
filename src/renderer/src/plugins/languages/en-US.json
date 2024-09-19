@@ -2,6 +2,7 @@
     "dragFile": {
       "selectOrDrop": "Select or drag files here",
       "selectedFiles": "Selected files",
-      "startDetection": "Start Detection"
+      "startDetection": "Start Detection",
+      "detecting": "Detecting"
     }
   }
