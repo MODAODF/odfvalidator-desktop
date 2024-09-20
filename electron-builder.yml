@@ -14,11 +14,16 @@ asarUnpack:
 win:
   executableName: odfvalidator-desktop
   icon: "public/icons/icon.ico"
-nsis:
+  target:
+    - target: msi
+      arch:
+        - x64
+msi:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
   createDesktopShortcut: always
+  upgradeCode: b67c1b4d-d911-4863-b9ad-2b9d0501988a
 mac:
   entitlementsInherit: build/entitlements.mac.plist
   extendInfo:
