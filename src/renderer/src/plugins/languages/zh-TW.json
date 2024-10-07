@@ -1,6 +1,6 @@
 {
     "dragFile": {
-      "selectOrDrop": "點擊選擇檔或拖曳置區域",
+      "selectOrDrop": "點選以選取檔案或將檔案拖曳至此區域",
       "selectedFiles": "已選取的檔案",
       "startDetection": "開始檢測",
       "detecting": "檢測中"
