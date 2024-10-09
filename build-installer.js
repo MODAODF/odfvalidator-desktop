@@ -53,6 +53,8 @@ const config = {
       </UI>
       <Property Id="WIXUI_INSTALLDIR" Value="APPLICATIONROOTDIRECTORY" />
       <WixVariable Id="WixUILicenseRtf" Value="${licenseRtfPath}" />
+      <WixVariable Id="WixUIDialogBmp" Value="${path.resolve(__dirname, 'public/icons/256x256.png')}" />
+      <WixVariable Id="WixUIBannerBmp" Value="${path.resolve(__dirname, 'public/icons/pdf_logo.jpg')}" />
     `
   },
   language: 1028, // 正體中文的語言代碼
