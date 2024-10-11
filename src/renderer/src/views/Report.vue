@@ -126,10 +126,9 @@ onBeforeMount(async () => {
             fileName,
             generator,
             ...(info[4]?.canFix && { canFix: info[4].canFix }),
-            layoutGridHasIssue: info[5].layoutGridHasIssue,
-            pageBreakHasIssue: info[6].pageBreakHasIssue,
-            spaceHasIssue: info[7].spaceHasIssue
-
+            layoutGridHasIssue: info[6].layoutGridHasIssue,
+            pageBreakHasIssue: info[7].pageBreakHasIssue,
+            spaceHasIssue: info[8].spaceHasIssue
         }
         info[0].standard ? passed[rootDocVersion].push(fileData) : failed[rootDocVersion].push(fileData)
         info[0].standard ? passedCount[rootDocVersion] += 1 : failedCount[rootDocVersion] += 1
@@ -421,6 +420,11 @@ function commonDidParseCell(data: any): void {
         data.cell.styles.fillColor = 'white';
     }
 }
+
+// 添加這個函數來印出 filelistData
+// function logFilelistData(data: any) {
+//   console.log('Report: filelistData:', JSON.stringify(data, null, 2));
+// }
 </script>
 
 <template>
