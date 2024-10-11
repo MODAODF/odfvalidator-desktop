@@ -227,9 +227,9 @@ async function downloadPdf(): Promise<void> {
             filePath, // 檔案名稱
             createStyleCell(results[2]?.rootDocVersion || '', verticalHorizontalCenter), // 符合ODF標準
             createStyleCell(results[3]?.generator || '', verticalHorizontalCenter), // 製作工具
-            createStyleCell(results[7]?.spaceHasIssue ? '建議修改' : '符合', verticalHorizontalCenter), // 連續空白
-            createStyleCell(results[6]?.pageBreakHasIssue ? '建議修改' : '符合', verticalHorizontalCenter), // Enter換頁
-            createStyleCell(results[5]?.layoutGridHasIssue ? '建議修改' : '符合', verticalHorizontalCenter), // 文字格子線
+            createStyleCell(results[8]?.spaceHasIssue ? '建議修改' : '符合', verticalHorizontalCenter), // 連續空白
+            createStyleCell(results[7]?.pageBreakHasIssue ? '建議修改' : '符合', verticalHorizontalCenter), // Enter換頁
+            createStyleCell(results[6]?.layoutGridHasIssue ? '建議修改' : '符合', verticalHorizontalCenter), // 文字格子線
         ];
 
         if (results[0]?.standard) {
