@@ -36,8 +36,8 @@ if (fs.existsSync(licenseRtfPath)) {
 const config = {
   appDirectory: APP_DIR,
   outputDirectory: OUT_DIR,
-  description: 'ODF Validator Desktop',
-  exe: 'ODF Validator Desktop.exe',
+  description: 'odfvalidator-desktop',
+  exe: 'odfvalidator-desktop.exe',
   name: 'ODF 格式驗證工具',
   manufacturer: 'OSSII',
   version: '1.0.0',
@@ -54,16 +54,19 @@ const config = {
       <Property Id="WIXUI_INSTALLDIR" Value="APPLICATIONROOTDIRECTORY" />
       <WixVariable Id="WixUILicenseRtf" Value="${licenseRtfPath}" />
       <WixVariable Id="WixUIDialogBmp" Value="${path.resolve(__dirname, 'public/icons/256x256.png')}" />
-      <WixVariable Id="WixUIBannerBmp" Value="${path.resolve(__dirname, 'public/icons/pdf_logo.jpg')}" />
+      <WixVariable Id="WixUIBannerBmp" Value="${path.resolve(__dirname, 'public/wix_banner.bmp')}" />
     `
   },
   language: 1028, // 正體中文的語言代碼
   cultures: ['zh-TW'],
-  // licenseFile: path.resolve(__dirname, 'LICENSE.rtf'),
   icon: path.resolve(__dirname, 'public/icons/icon.ico'),
   shortcutName: 'ODF 格式驗證工具',
-  programFilesFolderName: 'ODF Validator Desktop',
-  upgradeCode: 'b67c1b4d-d911-4863-b9ad-2b9d0501988a'
+  programFilesFolderName: 'odfvalidator-desktop',
+  upgradeCode: 'b67c1b4d-d911-4863-b9ad-2b9d0501988a',
+  // 添加以下選項來減小安裝包大小
+  compression: 'high',
+  removeDefaultProgramFiles: true,
+  removeEmptyFolders: true
 };
 
 // 印出配置
@@ -74,9 +77,11 @@ const msiCreator = new MSICreator(config);
 // 創建 MSI 安裝程式
 async function createMSI() {
   try {
+    // 添加日誌輸出
+    console.log("開始創建 MSI...");
     await msiCreator.create();
     await msiCreator.compile();
-    console.log("MSI 創建成功");
+    console.log("MSI 編譯完成");
   } catch (error) {
     console.error("創建 MSI 時出錯:", error);
     if (error.stderr) console.error("錯誤輸出:", error.stderr);
