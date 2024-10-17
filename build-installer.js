@@ -38,7 +38,7 @@ const config = {
   outputDirectory: OUT_DIR,
   description: 'odfvalidator-desktop',
   exe: 'odfvalidator-desktop.exe',
-  name: 'ODF 格式驗證工具',
+  name: 'ODF 格式檢測工具',
   manufacturer: 'OSSII',
   version: '1.0.0',
   ui: {
@@ -53,14 +53,14 @@ const config = {
       </UI>
       <Property Id="WIXUI_INSTALLDIR" Value="APPLICATIONROOTDIRECTORY" />
       <WixVariable Id="WixUILicenseRtf" Value="${licenseRtfPath}" />
-      <WixVariable Id="WixUIDialogBmp" Value="${path.resolve(__dirname, 'public/icons/256x256.png')}" />
-      <WixVariable Id="WixUIBannerBmp" Value="${path.resolve(__dirname, 'public/wix_banner.bmp')}" />
+      <WixVariable Id="WixUIDialogBmp" Value="${path.resolve(__dirname, 'public/background.png')}" />
+      <WixVariable Id="WixUIBannerBmp" Value="${path.resolve(__dirname, 'public/wix_banner.png')}" />
     `
   },
   language: 1028, // 正體中文的語言代碼
   cultures: ['zh-TW'],
   icon: path.resolve(__dirname, 'public/icons/icon.ico'),
-  shortcutName: 'ODF 格式驗證工具',
+  shortcutName: 'ODF 格式檢測工具',
   programFilesFolderName: 'odfvalidator-desktop',
   upgradeCode: 'b67c1b4d-d911-4863-b9ad-2b9d0501988a',
   // 添加以下選項來減小安裝包大小
