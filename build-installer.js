@@ -34,6 +34,7 @@ if (fs.existsSync(licenseRtfPath)) {
 
 // 創建配置對象
 const config = {
+  arch: ['x64'],
   appDirectory: APP_DIR,
   outputDirectory: OUT_DIR,
   description: 'odfvalidator-desktop',
