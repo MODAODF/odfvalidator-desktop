@@ -45,6 +45,8 @@ watch(javaInstalled, () => {
   </div>
 
   <div v-else>
+    <router-link to="/about" class="about-link">關於</router-link>
+    
     <p class="fs-4">Java 執行環境已安裝</p>
     <p class="fs-4">您執行 Java 環境的軟體及版本：{{ javaDescription }}</p>
   </div>
