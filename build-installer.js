@@ -33,15 +33,16 @@ if (fs.existsSync(licenseRtfPath)) {
 }
 
 // 創建配置對象
+const version = '1.1.0';
 const config = {
   arch: ['x64'],
   appDirectory: APP_DIR,
   outputDirectory: OUT_DIR,
   description: 'odfvalidator-desktop',
-  exe: 'odfvalidator-desktop.exe',
+  exe: `Odfvalidator-Desktop-Setup-${version}.exe`,
   name: 'ODF 格式檢測工具',
   manufacturer: 'OSSII',
-  version: '1.0.0',
+  version: version,
   ui: {
     chooseDirectory: true,
     images: {
