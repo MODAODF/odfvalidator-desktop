@@ -8,10 +8,7 @@
       <router-link to="/" class="back-link">返回</router-link>
     </div>
   </template>
-  
-  <script setup>
-  </script>
-  
+    
   <style scoped>
   .about-container {
     padding: 2rem;
