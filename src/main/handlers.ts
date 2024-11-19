@@ -10,13 +10,18 @@ const execPromise = util.promisify(exec)
 
 function getOdfvalidatorPath(): string {
   let jarPath = store.get('odfvalidatorPath') as string | undefined
+  console.log('[DEBUG] 從 store 獲取的 jarPath:', jarPath)
+  
   if (!jarPath) {
     // If not set, use the default path
     jarPath = app.isPackaged
       ? path.join(process.resourcesPath, 'app.asar.unpacked', 'public', 'libs', 'odfvalidator-0.12.0-jar-with-dependencies.jar')
       : path.join(app.getAppPath(), 'public', 'libs', 'odfvalidator-0.12.0-jar-with-dependencies.jar')
+    console.log('[DEBUG] 新設置的 jarPath:', jarPath)
     store.set('odfvalidatorPath', jarPath)
   }
+  
+  console.log('[DEBUG] 最終使用的 jarPath:', jarPath)
   return jarPath
 }
 
@@ -56,9 +61,10 @@ function escapeRegExp(string: string): string {
 
 export default class {
   public static initializeOdfvalidatorPath() {
-    store.delete('odfvalidatorPath') // 原本electron store裡的'odfvalidatorPath'值，即使原始碼更改了，再次執行electron也不會變更，因此初始化時將原有的值清空
+    console.log('[DEBUG] 開始初始化 odfvalidator 路徑')
+    store.clear()
     const jarPath = getOdfvalidatorPath()
-    console.log('Initialized odfvalidator path:', jarPath)
+    console.log('[DEBUG] 初始化完成，odfvalidator 路徑:', jarPath)
   }
   public static async checkJavaHandler(): Promise<string | null> {
     try {
