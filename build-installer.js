@@ -32,16 +32,20 @@ if (fs.existsSync(licenseRtfPath)) {
     console.error('錯誤：LICENSE.rtf 文件不存在於路徑:', licenseRtfPath);
 }
 
+// 讀取 package.json
+const packageJson = require('./package.json');
+const version = packageJson.version;
+const productName = packageJson.build.productName;
+
 // 創建配置對象
-const version = '1.1.0';
 const config = {
   arch: ['x64'],
   appDirectory: APP_DIR,
   outputDirectory: OUT_DIR,
-  description: 'odfvalidator-desktop',
-  exe: `Odfvalidator-Desktop-Setup-${version}.exe`,
+  description: packageJson.description,
+  exe: `${productName}.exe`,
   name: 'ODF 格式檢測工具',
-  manufacturer: 'OSSII',
+  manufacturer: packageJson.author.name,
   version: version,
   ui: {
     chooseDirectory: true,
@@ -63,7 +67,7 @@ const config = {
   cultures: ['zh-TW'],
   icon: path.resolve(__dirname, 'public/icons/icon.ico'),
   shortcutName: 'ODF 格式檢測工具',
-  programFilesFolderName: 'odfvalidator-desktop',
+  programFilesFolderName: productName,
   upgradeCode: 'b67c1b4d-d911-4863-b9ad-2b9d0501988a',
   // 添加以下選項來減小安裝包大小
   compression: 'high',
@@ -76,13 +80,25 @@ console.log('MSI Creator Configuration:', JSON.stringify(config, null, 2));
 
 const msiCreator = new MSICreator(config);
 
+// 在創建 MSI 之前修改模板
+msiCreator.wixTemplate = msiCreator.wixTemplate.replace(" (Machine - MSI)", '');
+msiCreator.wixTemplate = msiCreator.wixTemplate.replace(" (Machine)", '');
+
 // 創建 MSI 安裝程式
 async function createMSI() {
   try {
-    // 添加日誌輸出
     console.log("開始創建 MSI...");
     await msiCreator.create();
     await msiCreator.compile();
+    // 手動重命名檔案
+    const oldPath = path.join(OUT_DIR, 'odfvalidator-desktop.msi');
+    const newPath = path.join(OUT_DIR, `odfvalidator-desktop-${version}.msi`);
+
+    if (fs.existsSync(oldPath)) {
+      fs.renameSync(oldPath, newPath);
+      console.log(`MSI 已重命名為: ${newPath}`);
+    }
+
     console.log("MSI 編譯完成");
   } catch (error) {
     console.error("創建 MSI 時出錯:", error);

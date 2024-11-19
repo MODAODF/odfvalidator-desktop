@@ -1,9 +1,16 @@
+<script setup lang="ts">
+import { version } from '../../../../package.json'
+</script>
+
 <template>
     <div class="about-container">
-      <h2>關於ODF 格式檢測工具</h2>
+      <h2>關於 ODF 格式檢測工具</h2>
       <div class="content">
-        <p>版本：1.1.0</p>
-        <p>版權所有 © 2024, OSS Integral Institute Co., Ltd.</p>
+        <p>版本：{{ version }}</p>
+        <p>本發行版由 Ministry of Digital Affairs 提供。</p>
+        <p>著作權 © 2020-2024 LibreOffice 貢獻者。<br />
+          ODF 格式檢測工具衍生自 <a href="https://odfvalidator.org/">ODF Validator</a>。
+        </p>
       </div>
       <router-link to="/" class="back-link">返回</router-link>
     </div>
