@@ -24,7 +24,7 @@
     "build:mac": "npm run build && electron-builder --mac",
     "build:linux": "npm run build && electron-builder --linux",
     "build-icon": "electron-icon-builder --input=./public/icons/icon.ico --output=public/icons --flatten",
-    "build:msi": "electron-builder --win --x64 && node build-installer.js"
+    "build:msi": "npm run build && electron-builder --win --x64 && node build-installer.js"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.0",
