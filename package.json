@@ -125,7 +125,7 @@
       "icon": "public/icons/256x256.png",
       "executableName": "odfvalidator-desktop",
       "desktop": {
-        "Name": "odfvalidator-desktop-1.1.0",
+        "Name": "ODFValidator Desktop",
         "Icon": "/opt/odfvalidator-desktop/resources/icons/256x256.png",
         "Type": "Application",
         "Categories": "Utility;"
